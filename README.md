@@ -2,7 +2,7 @@
 
 A simple MVP for a payment gateway.
 
-#Features:
+# Features:
 
 - Make a Payment Request as a Merchant.
 
