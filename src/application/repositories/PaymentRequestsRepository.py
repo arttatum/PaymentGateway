@@ -1,21 +1,21 @@
 import os
 
 import boto3
-from mapping.mapper import Mapper
-from mapping.payment_request_mapper import PaymentRequestMapper
-from repositories.exceptions.NotFound import NotFound
 
+from application.mapping.mapper import Mapper
+from application.mapping.payment_request_mapper import PaymentRequestMapper
+from application.repositories.exceptions.NotFound import NotFound
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from shared_kernel.lambda_logging import get_logger
 
 
 class PaymentRequestsRepository:
     def __init__(self):
-        PaymentRequests_table_name = os.environ.get("PaymentRequestS_DYNAMODB_TABLE_NAME")
+        payment_requests_table_name = os.environ["PAYMENT_REQUESTS_DYNAMODB_TABLE_NAME"]
         self.logger = get_logger()
-        self.PaymentRequests_table = boto3.resource("dynamodb").Table(PaymentRequests_table_name)
+        self.payment_requests_table = boto3.resource("dynamodb").Table(payment_requests_table_name)
 
-    def upsert(self, PaymentRequest: PaymentRequest) -> None:
+    def upsert(self, payment_request: PaymentRequest) -> None:
         """Insert or overwrite.
 
         Why?
@@ -28,25 +28,24 @@ class PaymentRequestsRepository:
             TypeError: if provided object is not of type PaymentRequest
             Exception: unexpected exception is logged and bubbled upwards
         """
-        if type(PaymentRequest) != PaymentRequest:
-            error_message = f"The argument passed to upsert() must be a {PaymentRequest}, not {type(PaymentRequest)}."
+        if type(payment_request) != PaymentRequest:
+            error_message = f"The argument passed to upsert() must be a {PaymentRequest}, not {type(payment_request)}."
             self.logger.error(error_message)
             raise TypeError()
 
         try:
-            self.PaymentRequests_table.put_item(Item=Mapper.object_to_dict(PaymentRequest))
+            self.payment_requests_table.put_item(Item=Mapper.object_to_dict(payment_request))
             self.logger.debug("Created PaymentRequest in database.")
         except Exception as e:
             self.logger.error(f"Failed to create PaymentRequest in database, due to exception: {e.__class__.__name__}")
             self.logger.debug(f"Exception: {e}")
             raise e
 
-    def get_by_aggregate_root_id(self, PaymentRequest_request_id, merchant_id) -> PaymentRequest:
+    def get_by_aggregate_root_id(self, payment_request_id) -> PaymentRequest:
         try:
-            PaymentRequest_item = self.PaymentRequests.get_item(
+            payment_request_item = self.payment_requests_table.get_item(
                 Key={
-                    "PaymentRequest_request_id": PaymentRequest_request_id,
-                    "merchant_id": merchant_id,
+                    "id": payment_request_id,
                 }
             )["Item"]
             self.logger.debug("Retrieved PaymentRequest from database.")
@@ -61,4 +60,4 @@ class PaymentRequestsRepository:
             self.logger.debug(f"Exception: {e}")
             raise e
 
-        return PaymentRequestMapper.from_json(PaymentRequest_item)
+        return PaymentRequestMapper.from_json(payment_request_item)

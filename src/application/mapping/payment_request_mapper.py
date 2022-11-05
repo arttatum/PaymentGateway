@@ -1,5 +1,4 @@
-from mapping.mapper import Mapper
-
+from application.mapping.mapper import Mapper
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 
 
@@ -11,10 +10,13 @@ class PaymentRequestMapper:
         PaymentRequest: instance of PaymentRequest
     """
 
-    mapper = Mapper.for_type(PaymentRequest).with_attribute_mappings(
-        # tbd
-    )
+    mapper = Mapper.for_type(PaymentRequest)
+    # .with_attribute_mappings(
+    #     # tbd
+    # )
 
     @staticmethod
     def from_json(PaymentRequest_json: dict) -> PaymentRequest:
         return PaymentRequestMapper.mapper.from_json(PaymentRequest_json)
+
+    # TODO

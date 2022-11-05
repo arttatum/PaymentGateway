@@ -64,9 +64,7 @@ def test_type_error_raised_if_with_attribute_mappings_argument_is_not_Mapper_typ
 
 @pytest.mark.parametrize("not_a_list", [1, "abc", {"key": "value"}])
 def test_value_error_raised_if_list_expected_but_non_list_received(not_a_list, book_json):
-    book_mapper = Mapper.for_type(Book).with_attribute_mappings(
-        chapters=Mapper.for_list_of(Chapter)
-    )
+    book_mapper = Mapper.for_type(Book).with_attribute_mappings(chapters=Mapper.for_list_of(Chapter))
     book_json["chapters"] = not_a_list
     with pytest.raises(ValueError) as e:
         _ = book_mapper.from_json(book_json)
@@ -75,9 +73,7 @@ def test_value_error_raised_if_list_expected_but_non_list_received(not_a_list, b
 
 
 @pytest.mark.parametrize("invalid_json_structure", [set([1, 3]), tuple(["a", "b"])])
-def test_value_error_raised_if_json_contains_unsupported_data_structures(
-    invalid_json_structure, book_json
-):
+def test_value_error_raised_if_json_contains_unsupported_data_structures(invalid_json_structure, book_json):
     book_mapper = Mapper.for_type(Book).with_attribute_mappings(author=Mapper.for_type(Author))
 
     book_json["author"] = invalid_json_structure
