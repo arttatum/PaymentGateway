@@ -30,6 +30,45 @@ A simple MVP for a payment gateway.
 [Merchant_GetPaymentRequestStatus.pdf](https://github.com/arttatum/PaymentGateway/files/9942663/Merchant_GetPaymentRequestStatus.pdf)
 
 
+## Running the tests locally
+
+#### Pre-requesites
+- pip3
+- pyenv
+
+If you do not have python 3.9.13 installed, it will be installed when you run any `make` command. 
+
+A python virtual environment is used to manage dependencies in a consistent manner. All commands are run within an activated virtual environment automatically.
+
+## Run the unit test suite
+
+Enter the root directory of the repository in your terminal, then run `make unit` 
+
+## Run the linter 
+
+`make lint`
+
+## Run the prettifier
+
+`make pretty`
+
+
+# Internal Software Design
+
+## Domain Driven Design
+
+Some tactical patterns of domain driven design are employed here: Aggregate / Value Object / Repository / Command / Application Service.
+
+Due to the time constraints when building this system and the nature of Python, properly implementing these patterns was out of scope, but their spirit lives on (I hope)!
+
+
+# Hexagonal Architecture / Ports and Adapters
+
+The core of the system is expressed in infrastructure ignorant terms.
+
+Requests are routed to Lambdas through various means (SQS, ALB, API Gateway). must insulate the inner 
+
+
 ## Layers
 
 ### Infrastructure
@@ -42,8 +81,9 @@ Driven by Lambda, the core compute technology used.
 
 Responsibilities:
 - Interfaces with other AWS services (API GW, SQS, ALB, DynamoDB).
-- Translates external requests into Commands understood by the domain model.
-- Delegates business logic services / aggregate roots.
+- Insulates Core of system from external concerns. 
+- Translates incoming requests into Commands (or Queries).
+- Delegates business logic to Core of system.
 
 ### Core
 
@@ -53,6 +93,4 @@ The only aggregate modelled here is the PaymentRequest. The Merchant aggregate i
 
 ### Shared Kernel
 
-A slight misuse of the term, this folder contains the code that is required across all layers.
-
-For now: logging
+A slight misuse of the term, this folder contains the code that is required across all layers (Guard clauses, logging)

@@ -12,11 +12,9 @@ class PaymentRequestMapper:
 
     mapper = Mapper.for_type(PaymentRequest)
     # .with_attribute_mappings(
-    #     # tbd
+    #     TODO
     # )
 
     @staticmethod
     def from_json(PaymentRequest_json: dict) -> PaymentRequest:
         return PaymentRequestMapper.mapper.from_json(PaymentRequest_json)
-
-    # TODO
