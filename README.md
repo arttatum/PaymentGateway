@@ -66,7 +66,7 @@ Due to the time constraints when building this system and the nature of Python, 
 
 The core of the system is expressed in infrastructure ignorant terms.
 
-Requests are routed to Lambdas through various means (SQS, ALB, API Gateway). must insulate the inner 
+Requests are routed to Lambdas through various means (SQS, ALB, API Gateway).
 
 
 ## Layers
