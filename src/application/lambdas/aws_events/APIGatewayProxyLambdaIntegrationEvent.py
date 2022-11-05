@@ -5,6 +5,7 @@ class APIGatewayEvent:
     """
     Summary: Class to parse API Gateway Proxy Lambda Integration event
     """
+
     @classmethod
     def from_dict(cls, event: dict):
         """Given an event that is a dict, convert it to an object to clean lambda

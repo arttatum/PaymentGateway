@@ -1,12 +1,14 @@
+from core.commands.ForwardPaymentRequestToAcquiringBank import (
+    ForwardPaymentRequestToAcquiringBank,
+)
 from core.commands.InitiatePaymentRequest import InitiatePaymentRequest
-from core.commands.ForwardPaymentRequestToAcquiringBank import ForwardPaymentRequestToAcquiringBank
 from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankResponse
 
 
 class PaymentRequestService:
     def initiate_payment_request(self, command: InitiatePaymentRequest):
         # create PaymentRequest
-        # save it 
+        # save it
         # publish command to queue
         pass
 

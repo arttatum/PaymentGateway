@@ -1,6 +1,6 @@
 import logging
-from logging import LoggerAdapter
 import os
+from logging import LoggerAdapter
 
 from pythonjsonlogger import jsonlogger
 
@@ -13,16 +13,14 @@ def _get_environment_variable_log_level():
     # This method returns a number when given the name, and a name when given a number
     log_level_number = logging.getLevelName(environment_variable_log_level)
 
-    # Default to INFO if invalid log level is specified in environment variable 
+    # Default to INFO if invalid log level is specified in environment variable
     if log_level_number == "Level %s":
         return logging.INFO
 
     return log_level_number
 
 
-def configure_context_logger(
-    *args, **kwargs
-):
+def configure_context_logger(*args, **kwargs):
     logger = logging.getLogger()
 
     # Remove AWS configured log handler, or loggers configured for previous runs of the lambda

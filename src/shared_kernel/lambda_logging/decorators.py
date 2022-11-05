@@ -1,4 +1,5 @@
 import functools
+
 from lambda_logging.set_up_logger import configure_context_logger, get_logger
 
 
@@ -41,4 +42,5 @@ def configure_lambda_logger(func):
             return function_return_value
         finally:
             logger.info(f"Finished execution of {function_name} lambda.")
+
     return wrapper

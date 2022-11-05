@@ -1,4 +1,5 @@
 import json
+
 from shared_kernel.lambda_logging.set_up_logger import get_logger
 
 
@@ -12,7 +13,7 @@ class Mapper:
         self.target_type = None
         self.is_list_mapper = False
         self.logger = get_logger()
-    
+
     @classmethod
     def for_type(cls, target_type: type):
         """Configure mapper for the specified target type.
@@ -78,9 +79,7 @@ class Mapper:
 
         for attribute_name, attribute_mapper in kwargs.items():
             if not isinstance(attribute_mapper, Mapper):
-                raise TypeError(
-                    f"Required instance of Mapper, recieved {attribute_mapper.__name__}"
-                )
+                raise TypeError(f"Required instance of Mapper, recieved {attribute_mapper.__name__}")
             self.attribute_mappers[attribute_name] = attribute_mapper
         return self
 
@@ -124,7 +123,9 @@ class Mapper:
                 continue
 
             if type(value) is not dict:
-                error_message = f"Non-standard JSON structure detected. Cannot map {type(value)} to {attribute_mapper.target_type}"
+                error_message = (
+                    f"Non-standard JSON structure detected. Cannot map {type(value)} to {attribute_mapper.target_type}"
+                )
                 self.logger.info(error_message)
                 raise ValueError(error_message)
 
@@ -149,7 +150,7 @@ class Mapper:
         Useful when trying to persist aggregate roots to json based data stores (dynamodb).
 
         Args:
-            obj (object): The object to map 
+            obj (object): The object to map
 
         Returns:
             dict: the dictionary representation of the object
