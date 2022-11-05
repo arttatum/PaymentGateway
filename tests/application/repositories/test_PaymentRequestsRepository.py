@@ -2,7 +2,6 @@ import os
 import uuid
 
 import pytest
-from moto import mock_dynamodb
 
 from application.repositories.exceptions.NotFound import NotFound
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
@@ -68,7 +67,9 @@ def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_tab
 
 
 @pytest.mark.parametrize("not_a_payment_request", [123, "abc", {"do": "re"}, ("me",)])
-def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_table, not_a_payment_request):
+def test_PaymentRequestRepository_upsert_raises_TypeError_if_passed_something_other_than_PaymentRequest_object(
+    payment_requests_table, not_a_payment_request
+):
     # Given
     repo = PaymentRequestsRepository()
 
