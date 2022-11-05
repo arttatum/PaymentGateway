@@ -1,7 +1,7 @@
 import functools
 from logging import LoggerAdapter
 
-from logging.set_up_logger import configure_context_logger, get_logger
+from lambda_logging.set_up_logger import configure_context_logger, get_logger
 
 
 def return_500_for_unhandled_errors(func):
