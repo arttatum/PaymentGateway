@@ -1,5 +1,5 @@
 import json
-from lambda_logging.set_up_logger import get_logger
+from shared_kernel.lambda_logging.set_up_logger import get_logger
 
 
 class Mapper:

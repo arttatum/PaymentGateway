@@ -1,6 +1,6 @@
 import os
 
-from lambda_logging import get_logger
+from shared_kernel.lambda_logging import get_logger
 import boto3
 
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
