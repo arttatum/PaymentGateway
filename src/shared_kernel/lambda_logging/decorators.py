@@ -1,6 +1,6 @@
 import functools
 
-from lambda_logging.set_up_logger import configure_context_logger, get_logger
+from shared_kernel.lambda_logging.set_up_logger import configure_context_logger, get_logger
 
 
 def return_500_for_unhandled_errors(func):
