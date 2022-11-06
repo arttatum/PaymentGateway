@@ -26,12 +26,12 @@ def test_PaymentRequestRepository_upsert_inserts_item_in_db(payment_requests_tab
 
     merchant_id = str(uuid.uuid4())
 
-    initiated_payment_request = PaymentRequest(merchant_id)
+    submitted_payment_request = PaymentRequest(merchant_id)
 
-    id = initiated_payment_request.id
+    id = submitted_payment_request.id
 
     # When
-    repo.upsert(initiated_payment_request)
+    repo.upsert(submitted_payment_request)
 
     # Then
     clearance_db_object = payment_requests_table.get_item(Key={"id": id})

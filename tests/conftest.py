@@ -1,4 +1,6 @@
+import json
 import os
+import uuid
 
 import boto3
 import pytest
@@ -53,3 +55,32 @@ def property_values_are_equal(some_object, another_object):
         if another_object[property] != value:
             return False
     return True
+
+
+@pytest.fixture(scope="session")
+def make_api_gateway_event() -> dict:
+    def build_api_gateway_event(payload: dict = {}, path_parameters: dict = {"merchant_id": str(uuid.uuid4())}):
+        return {
+            "resource": "",
+            "path": "",
+            "pathParameters": path_parameters,
+            "httpMethod": "",
+            "headers": {},
+            "requestContext": {"resourcePath": "", "httpMethod": ""},
+            "body": json.dumps(payload),
+        }
+
+    return build_api_gateway_event
+
+
+@pytest.fixture(scope="session")
+def make_lambda_context_object():
+    class AWSLambdaContext:
+        def __init__(self, function_name, aws_request_id):
+            self.function_name = function_name
+            self.aws_request_id = aws_request_id
+
+    def build_lambda_context_object(function_name, aws_request_id="182731916"):
+        return AWSLambdaContext(function_name, aws_request_id)
+
+    return build_lambda_context_object

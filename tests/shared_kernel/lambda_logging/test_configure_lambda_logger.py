@@ -10,19 +10,31 @@ def good_mock_lambda(event, context):
     return {"statusCode": 202, "body": "Accepted"}
 
 
-class AWSLambdaContext:
-    def __init__(self, function_name, aws_request_id):
-        self.function_name = function_name
-        self.aws_request_id = aws_request_id
-
-
-def test_configure_lambda_logger_wraps_lambda_execution_with_started_and_finished_messages(capsys):
+def test_configure_lambda_logger_wraps_lambda_execution_with_started_and_finished_messages(
+    capsys, make_lambda_context_object
+):
     function_name = "a_great_name"
-    context = AWSLambdaContext(function_name, "12345")
+    context = make_lambda_context_object(function_name, "12345")
 
     good_mock_lambda(None, context)
 
     logs_from_lambda = capsys.readouterr().err
 
+    assert '"aws_request_id": "12345"' in logs_from_lambda
+    assert '"function_name": "a_great_name"' in logs_from_lambda
     assert f"Started execution of {function_name} lambda." in logs_from_lambda
     assert f"Finished execution of {function_name} lambda." in logs_from_lambda
+
+
+def test_configure_lambda_logger_adds_function_name_and_aws_request_id_to_log_records(
+    capsys, make_lambda_context_object
+):
+    function_name = "a_great_name"
+    context = make_lambda_context_object(function_name, "12345")
+
+    good_mock_lambda(None, context)
+
+    logs_from_lambda = capsys.readouterr().err
+
+    assert '"aws_request_id": "12345"' in logs_from_lambda
+    assert '"function_name": "a_great_name"' in logs_from_lambda
