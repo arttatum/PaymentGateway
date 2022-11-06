@@ -31,7 +31,7 @@ class ExpiryDate(ValueObject):
 
         if int(f"20{self.year}") < today.year:
             return True
-        elif int(self.month) < today.month:
+        elif int(f"20{self.year}") == today.year and int(self.month) < today.month:
             return True
-
-        return False
+        else:
+            return False
