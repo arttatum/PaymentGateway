@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from core.payment_request_aggregate.value_objects.Currency import Currency
 from shared_kernel.exceptions.DomainException import DomainException
 from shared_kernel.ValueObject import ValueObject
@@ -9,9 +11,9 @@ class MonetaryAmount(ValueObject):
         # A similar pattern as is used in the command initialisation could support this.
 
         try:
-            amount = float(amount)
-        except:
-            raise DomainException("Amount could not be parsed to a floating point number.")
+            amount = Decimal(amount)
+        except Exception:
+            raise DomainException("Amount could not be parsed to a decimal type.")
 
         self.currency = Currency(currency)
 

@@ -5,6 +5,7 @@ import pytest
 
 from application.repositories.exceptions.NotFound import NotFound
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
+from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from tests.conftest import property_values_are_equal
 
@@ -26,7 +27,9 @@ def test_PaymentRequestRepository_upsert_inserts_item_in_db(payment_requests_tab
 
     merchant_id = str(uuid.uuid4())
 
-    submitted_payment_request = PaymentRequest(merchant_id)
+    submit_payment_request = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+
+    submitted_payment_request = PaymentRequest(submit_payment_request)
 
     id = submitted_payment_request.id
 
@@ -37,7 +40,7 @@ def test_PaymentRequestRepository_upsert_inserts_item_in_db(payment_requests_tab
     clearance_db_object = payment_requests_table.get_item(Key={"id": id})
 
     assert clearance_db_object["Item"]["id"] == id
-    assert clearance_db_object["Item"]["merchant_id"] == merchant_id
+    assert clearance_db_object["Item"]["merchant_id"]["value"] == merchant_id
     assert clearance_db_object["Item"]["is_sent_to_acquiring_bank"] is False
 
 
@@ -47,7 +50,9 @@ def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_tab
 
     merchant_id = str(uuid.uuid4())
 
-    payment_request_to_forward = PaymentRequest(merchant_id)
+    submit_payment_request = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+
+    payment_request_to_forward = PaymentRequest(submit_payment_request)
 
     id = payment_request_to_forward.id
 
@@ -62,7 +67,7 @@ def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_tab
     clearance_db_object = payment_requests_table.get_item(Key={"id": id})
 
     assert clearance_db_object["Item"]["id"] == id
-    assert clearance_db_object["Item"]["merchant_id"] == merchant_id
+    assert clearance_db_object["Item"]["merchant_id"]["value"] == merchant_id
     assert clearance_db_object["Item"]["is_sent_to_acquiring_bank"] is True
 
 
@@ -95,7 +100,9 @@ def test_PaymentRequestRepository_get_by_aggregate_root_id_returns_what_was_save
 
     merchant_id = str(uuid.uuid4())
 
-    payment_request_to_save = PaymentRequest(merchant_id)
+    submit_payment_request = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+
+    payment_request_to_save = PaymentRequest(submit_payment_request)
 
     id = payment_request_to_save.id
 
