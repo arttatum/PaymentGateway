@@ -2,7 +2,7 @@ import pytest
 
 from application.mapping.mapper import Mapper
 
-from ..mapper.fixtures import Author, Book, Chapter, Publisher, map_object_to_dict
+from .fixtures import Author, Book, Chapter, Publisher, map_object_to_dict
 
 
 @pytest.fixture(scope="function")
