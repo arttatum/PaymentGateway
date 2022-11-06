@@ -26,4 +26,4 @@ def test_return_400_for_domain_exceptions_works():
     response_from_lambda_that_raised_domain_exception = domain_exception_mock_lambda(None, None)
 
     assert response_from_lambda_that_raised_domain_exception["statusCode"] == 400
-    assert response_from_lambda_that_raised_domain_exception["body"] == "The price cannot be negative."
+    assert response_from_lambda_that_raised_domain_exception["body"] == ["The price cannot be negative."]

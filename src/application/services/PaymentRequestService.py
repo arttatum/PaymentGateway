@@ -1,16 +1,30 @@
+import os
+
+import boto3
+
+from application.mapping.mapper import Mapper
+from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
 from core.commands.ForwardPaymentRequestToAcquiringBank import (
     ForwardPaymentRequestToAcquiringBank,
 )
 from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankResponse
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
+from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 
 
 class PaymentRequestService:
+    def __init__(self):
+        self.payment_requests_repo = PaymentRequestsRepository()
+
     def submit_payment_request(self, command: SubmitPaymentRequest):
-        # create PaymentRequest
-        # save it
-        # publish command to queue
-        pass
+        payment_request = PaymentRequest(command)
+        self.payment_requests_repo.upsert(payment_request)
+
+        forward_payment_request_command = ForwardPaymentRequestToAcquiringBank(
+            payment_request.id, payment_request.merchant_id
+        )
+        self.send_forward_to_acquiring_bank_command_to_queue(forward_payment_request_command)
+        return payment_request.id
 
     def forward_payment_request_to_aquiring_bank(self, command: ForwardPaymentRequestToAcquiringBank):
         # get payment request aggregate root
@@ -25,3 +39,14 @@ class PaymentRequestService:
         # call method on object: process_aquiring_bank_response
         # update payment request aggregate root
         pass
+
+    def send_forward_to_acquiring_bank_command_to_queue(self, command: ForwardPaymentRequestToAcquiringBank):
+        """TECH DEBT: this mechanism could be refactored behind an abstraction as required.
+
+        Args:
+            command (ForwardPaymentRequestToAcquiringBank): Command to add to the queue
+        """
+        queue_name = os.environ["PAYMENT_REQUESTS_TO_FORWARD_QUEUE_NAME"]
+        sqs_resource = boto3.resource("sqs")
+        payments_to_forward_queue = sqs_resource.get_queue_by_name(QueueName=queue_name)
+        payments_to_forward_queue.send_message(MessageBody=Mapper.object_to_string(command))

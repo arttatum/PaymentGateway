@@ -35,7 +35,7 @@ def test_SubmitPaymentRequest_returns_400_if_initialisation_of_command_raises_do
     response = lambda_handler(event, context)
 
     assert response["statusCode"] == 400
-    assert response["body"] == "Price cannot be negative."
+    assert response["body"] == ["Price cannot be negative."]
 
     mock_command_init.assert_called_once()
     mock_service_submit_payment_request.assert_not_called()

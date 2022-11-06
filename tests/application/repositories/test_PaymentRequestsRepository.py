@@ -37,11 +37,11 @@ def test_PaymentRequestRepository_upsert_inserts_item_in_db(payment_requests_tab
     repo.upsert(submitted_payment_request)
 
     # Then
-    clearance_db_object = payment_requests_table.get_item(Key={"id": id})
+    payment_request_db_object = payment_requests_table.get_item(Key={"id": id})
 
-    assert clearance_db_object["Item"]["id"] == id
-    assert clearance_db_object["Item"]["merchant_id"]["value"] == merchant_id
-    assert clearance_db_object["Item"]["is_sent_to_acquiring_bank"] is False
+    assert payment_request_db_object["Item"]["id"] == id
+    assert payment_request_db_object["Item"]["merchant_id"]["value"] == merchant_id
+    assert payment_request_db_object["Item"]["is_sent_to_acquiring_bank"] is False
 
 
 def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_table):
@@ -64,11 +64,11 @@ def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_tab
     repo.upsert(payment_request_to_forward)
 
     # Then
-    clearance_db_object = payment_requests_table.get_item(Key={"id": id})
+    payment_request_db_object = payment_requests_table.get_item(Key={"id": id})
 
-    assert clearance_db_object["Item"]["id"] == id
-    assert clearance_db_object["Item"]["merchant_id"]["value"] == merchant_id
-    assert clearance_db_object["Item"]["is_sent_to_acquiring_bank"] is True
+    assert payment_request_db_object["Item"]["id"] == id
+    assert payment_request_db_object["Item"]["merchant_id"]["value"] == merchant_id
+    assert payment_request_db_object["Item"]["is_sent_to_acquiring_bank"] is True
 
 
 @pytest.mark.parametrize("not_a_payment_request", [123, "abc", {"do": "re"}, ("me",)])

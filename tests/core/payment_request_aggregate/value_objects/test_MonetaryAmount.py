@@ -1,6 +1,8 @@
 import pytest
+
 from core.payment_request_aggregate.value_objects.MonetaryAmount import MonetaryAmount
 from shared_kernel.exceptions.DomainException import DomainException
+
 
 def test_negative_amount_results_in_domain_exception():
     amount = -12

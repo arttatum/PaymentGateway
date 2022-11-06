@@ -15,7 +15,7 @@ def return_400_for_domain_exceptions(func):
         except DomainException as e:
             logger = get_logger()
             logger.info(f"Domain Exception: {str(e)}")
-            return {"statusCode": 400, "body": str(e)}
+            return {"statusCode": 400, "body": e.messages}
 
     return wrapper
 

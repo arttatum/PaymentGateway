@@ -1,10 +1,12 @@
-from shared_kernel.exceptions.DomainException import DomainException
-from core.payment_request_aggregate.value_objects.MerchantId import MerchantId
 import pytest
+
+from core.payment_request_aggregate.value_objects.MerchantId import MerchantId
+from shared_kernel.exceptions.DomainException import DomainException
+
 
 def test_merchant_id_must_be_uuid4():
     not_uuid_4 = "12356789"
-    
+
     with pytest.raises(DomainException) as e:
         MerchantId(not_uuid_4)
 

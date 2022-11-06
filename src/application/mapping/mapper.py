@@ -155,4 +155,8 @@ class Mapper:
         Returns:
             dict: the dictionary representation of the object
         """
-        return json.loads(json.dumps(obj, default=lambda o: getattr(o, "__dict__", str(o))))
+        return json.loads(Mapper.object_to_string(obj))
+
+    @staticmethod
+    def object_to_string(obj: object) -> str:
+        return json.dumps(obj, default=lambda o: getattr(o, "__dict__", str(o)))
