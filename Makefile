@@ -27,4 +27,4 @@ pretty: .venv
 
 .PHONY: lint
 lint: .venv
-	. $(activate_venv); flake8 . --count --show-source --statistics --max-complexity=10 --max-line-length=120 --exclude .venv,packages
+	. $(activate_venv); flake8 . --count --show-source --statistics --max-complexity=13 --max-line-length=120 --exclude .venv,packages
