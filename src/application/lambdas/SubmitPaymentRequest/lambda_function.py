@@ -30,9 +30,9 @@ def lambda_handler(event, context):
 
     payload = json.loads(event["body"])
 
-    (card_number, expiry_date, amount, currency, ccv) = _get_fields_from_payload(payload)
+    (card_number, expiry_date, amount, currency, cvv) = _get_fields_from_payload(payload)
 
-    command = SubmitPaymentRequest(merchant_id, card_number, expiry_date, amount, currency, ccv)
+    command = SubmitPaymentRequest(merchant_id, card_number, expiry_date, amount, currency, cvv)
 
     service = PaymentRequestService()
 
@@ -47,5 +47,5 @@ def _get_fields_from_payload(payload: dict):
         payload.get("expiry_date"),
         payload.get("amount"),
         payload.get("currency"),
-        payload.get("ccv"),
+        payload.get("cvv"),
     )

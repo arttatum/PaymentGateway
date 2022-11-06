@@ -1,12 +1,10 @@
-from unittest import mock
 from unittest.mock import patch
-
-import pytest
 
 from application.lambdas.SubmitPaymentRequest.lambda_function import lambda_handler
 from application.services.PaymentRequestService import PaymentRequestService
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from shared_kernel.exceptions.DomainException import DomainException
+
 
 @patch.object(PaymentRequestService, "submit_payment_request")
 def test_SubmitPaymentRequest_returns_500_if_event_is_invalid(
@@ -22,6 +20,7 @@ def test_SubmitPaymentRequest_returns_500_if_event_is_invalid(
     assert response["body"] == "Internal Server Error"
 
     mock_service_submit_payment_request.assert_not_called()
+
 
 @patch.object(PaymentRequestService, "submit_payment_request")
 @patch.object(SubmitPaymentRequest, "__init__")
@@ -40,7 +39,6 @@ def test_SubmitPaymentRequest_returns_400_if_initialisation_of_command_raises_do
 
     mock_command_init.assert_called_once()
     mock_service_submit_payment_request.assert_not_called()
-
 
 
 @patch.object(PaymentRequestService, "submit_payment_request")
