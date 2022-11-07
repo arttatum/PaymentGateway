@@ -7,6 +7,8 @@ from application.repositories.exceptions.NotFound import NotFound
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
+from core.payment_request_aggregate.value_objects.CardNumber import CardNumber
+from core.payment_request_aggregate.value_objects.CVV import CVV
 from tests.conftest import property_values_are_equal
 
 # TODO: Mock out dymabo's put_item() and get_item() methods to simulate failed connection to dynamodb.
@@ -113,4 +115,6 @@ def test_PaymentRequestRepository_get_by_aggregate_root_id_returns_what_was_save
 
     # Then
     assert property_values_are_equal(payment_request_from_repo, payment_request_to_save)
-    assert type(payment_request_to_save) == type(payment_request_from_repo)
+    assert type(payment_request_from_repo) == PaymentRequest
+    assert type(payment_request_from_repo.card_number) == CardNumber
+    assert type(payment_request_from_repo.cvv) == CVV
