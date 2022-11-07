@@ -29,15 +29,18 @@ class PaymentRequestsRepository:
             Exception: unexpected exception is logged and bubbled upwards
         """
         if type(payment_request) != PaymentRequest:
-            error_message = f"The argument passed to upsert() must be a {PaymentRequest}, not {type(payment_request)}."
-            self.logger.error(error_message)
+            self.logger.error(
+                f"The argument passed to upsert() must be a {PaymentRequest}, not {type(payment_request)}."
+            )
             raise TypeError()
 
         try:
             self.payment_requests_table.put_item(Item=Mapper.object_to_dict(payment_request))
-            self.logger.debug("Created PaymentRequest in database.")
+            self.logger.debug("Saved PaymentRequest in database.")
         except Exception as e:
-            self.logger.error(f"Failed to create PaymentRequest in database, due to exception: {e.__class__.__name__}")
+            self.logger.error(
+                f"Failed to save PaymentRequest in database, due to exception: {e.__class__.__name__}"
+            )
             self.logger.debug(f"Exception: {e}")
             raise e
 

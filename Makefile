@@ -21,8 +21,8 @@ unit: .venv
 pretty: .venv
 	. $(activate_venv); isort --profile black ./src
 	. $(activate_venv); isort --profile black ./tests
-	. $(activate_venv); black ./src --line-length 120
-	. $(activate_venv); black ./tests --line-length 120
+	. $(activate_venv); black ./src --line-length 100
+	. $(activate_venv); black ./tests --line-length 100
 
 
 .PHONY: lint

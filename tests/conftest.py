@@ -77,7 +77,8 @@ def make_api_gateway_event() -> dict:
     }
 
     def build_api_gateway_event(
-        payload: dict = default_post_payment_request_body, path_parameters: dict = {"merchant_id": str(uuid.uuid4())}
+        payload: dict = default_post_payment_request_body,
+        path_parameters: dict = {"merchant_id": str(uuid.uuid4())},
     ):
         return {
             "resource": "",

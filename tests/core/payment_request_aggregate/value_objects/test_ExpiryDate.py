@@ -4,7 +4,9 @@ from core.payment_request_aggregate.value_objects.ExpiryDate import ExpiryDate
 from shared_kernel.exceptions.DomainException import DomainException
 
 
-@pytest.mark.parametrize("incorrect_format_expiry_date", ["008-22", "1-23", "11_23", "11-299", "00-25"])
+@pytest.mark.parametrize(
+    "incorrect_format_expiry_date", ["008-22", "1-23", "11_23", "11-299", "00-25"]
+)
 def test_ExpiryDate_must_be_mm_dash_yy_format(incorrect_format_expiry_date):
     with pytest.raises(DomainException):
         ExpiryDate(incorrect_format_expiry_date)

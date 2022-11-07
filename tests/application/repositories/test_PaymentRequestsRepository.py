@@ -17,7 +17,9 @@ from tests.conftest import property_values_are_equal
 # but it is not suitable for simulating random errors.
 
 
-def test_PaymentRequestRepository_raises_KeyError_if_table_name_env_variable_is_not_set(payment_requests_table):
+def test_PaymentRequestRepository_raises_KeyError_if_table_name_env_variable_is_not_set(
+    payment_requests_table,
+):
     del os.environ["PAYMENT_REQUESTS_DYNAMODB_TABLE_NAME"]
     with pytest.raises(KeyError):
         PaymentRequestsRepository()
@@ -29,7 +31,9 @@ def test_PaymentRequestRepository_upsert_inserts_item_in_db(payment_requests_tab
 
     merchant_id = str(uuid.uuid4())
 
-    submit_payment_request = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+    submit_payment_request = SubmitPaymentRequest(
+        merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321"
+    )
 
     submitted_payment_request = PaymentRequest(submit_payment_request)
 
@@ -52,7 +56,9 @@ def test_PaymentRequestRepository_upsert_updates_item_in_db(payment_requests_tab
 
     merchant_id = str(uuid.uuid4())
 
-    submit_payment_request = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+    submit_payment_request = SubmitPaymentRequest(
+        merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321"
+    )
 
     payment_request_to_forward = PaymentRequest(submit_payment_request)
 
@@ -96,13 +102,17 @@ def test_PaymentRequestRepository_get_by_aggregate_root_id_raises_NotFound_when_
         repo.get_by_aggregate_root_id(str(uuid.uuid4()))
 
 
-def test_PaymentRequestRepository_get_by_aggregate_root_id_returns_what_was_saved(payment_requests_table):
+def test_PaymentRequestRepository_get_by_aggregate_root_id_returns_what_was_saved(
+    payment_requests_table,
+):
     # Given
     repo = PaymentRequestsRepository()
 
     merchant_id = str(uuid.uuid4())
 
-    submit_payment_request = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+    submit_payment_request = SubmitPaymentRequest(
+        merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321"
+    )
 
     payment_request_to_save = PaymentRequest(submit_payment_request)
 

@@ -10,7 +10,9 @@ def test_submit_payment_request_adds_payment_request_to_dynamodb_and_sends_comma
     # Given
     service = PaymentRequestService()
     merchant_id = str(uuid.uuid4())
-    command = SubmitPaymentRequest(merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321")
+    command = SubmitPaymentRequest(
+        merchant_id, "1234123412341234", "01-24", "15.75", "POUNDS", "321"
+    )
 
     # When
     payment_request_id = service.submit_payment_request(command)

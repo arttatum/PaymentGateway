@@ -36,7 +36,9 @@ class PaymentRequest(AggregateRoot):
             self.add_domain_exception(e)
 
         try:
-            self.amount = MonetaryAmount(submit_payment_request.amount, submit_payment_request.currency)
+            self.amount = MonetaryAmount(
+                submit_payment_request.amount, submit_payment_request.currency
+            )
         except DomainException as e:
             self.add_domain_exception(e)
 

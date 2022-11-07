@@ -79,7 +79,9 @@ class Mapper:
 
         for attribute_name, attribute_mapper in kwargs.items():
             if not isinstance(attribute_mapper, Mapper):
-                raise TypeError(f"Required instance of Mapper, recieved {attribute_mapper.__name__}")
+                raise TypeError(
+                    f"Required instance of Mapper, recieved {attribute_mapper.__name__}"
+                )
             self.attribute_mappers[attribute_name] = attribute_mapper
         return self
 
@@ -152,8 +154,8 @@ class Mapper:
         Returns:
             dict: the dictionary representation of the object
         """
-        return json.loads(Mapper.object_to_string(obj))
+        return json.loads(Mapper.object_to_json_string(obj))
 
     @staticmethod
-    def object_to_string(obj: object) -> str:
+    def object_to_json_string(obj: object) -> str:
         return json.dumps(obj, default=lambda o: getattr(o, "__dict__", str(o)))

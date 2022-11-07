@@ -8,6 +8,7 @@ from core.payment_request_aggregate.value_objects.CVV import CVV
 from core.payment_request_aggregate.value_objects.ExpiryDate import ExpiryDate
 from core.payment_request_aggregate.value_objects.MerchantId import MerchantId
 from core.payment_request_aggregate.value_objects.MonetaryAmount import MonetaryAmount
+from shared_kernel.lambda_logging import get_logger
 
 
 class PaymentRequestMapper:
@@ -30,4 +31,5 @@ class PaymentRequestMapper:
 
     @staticmethod
     def from_json(PaymentRequest_json: dict) -> PaymentRequest:
+        get_logger().info("Mapping item from dynamodb table to PaymentRequest model.")
         return PaymentRequestMapper.mapper.from_json(PaymentRequest_json)
