@@ -30,22 +30,25 @@ def lambda_handler(event, context):
 
     payload = json.loads(event["body"])
 
-    (card_number, expiry_date, amount, currency, cvv) = _get_fields_from_payload(payload)
+    try:
+        (card_number, expiry_date, amount, currency, cvv) = _get_fields_from_payload(payload)
+    except KeyError as ke:
+        return {"statusCode": 400, "body": f"Missing required field: {ke}"}
 
     command = SubmitPaymentRequest(merchant_id, card_number, expiry_date, amount, currency, cvv)
 
     service = PaymentRequestService()
 
-    service.submit_payment_request(command)
+    payment_request_id = service.submit_payment_request(command)
 
-    return {"statusCode": 202, "body": "Accepted"}
+    return {"statusCode": 201, "body": payment_request_id}
 
 
 def _get_fields_from_payload(payload: dict):
     return (
-        payload.get("card_number"),
-        payload.get("expiry_date"),
-        payload.get("amount"),
-        payload.get("currency"),
-        payload.get("cvv"),
+        payload["card_number"],
+        payload["expiry_date"],
+        payload["amount"],
+        payload["currency"],
+        payload["cvv"],
     )

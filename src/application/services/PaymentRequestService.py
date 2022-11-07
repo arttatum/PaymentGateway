@@ -10,20 +10,27 @@ from core.commands.ForwardPaymentRequestToAcquiringBank import (
 from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankResponse
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
+from shared_kernel.lambda_logging.set_up_logger import get_logger
 
 
 class PaymentRequestService:
     def __init__(self):
         self.payment_requests_repo = PaymentRequestsRepository()
+        self.logger = get_logger()
 
     def submit_payment_request(self, command: SubmitPaymentRequest):
         payment_request = PaymentRequest(command)
+        self.logger.info("Created new Payment Request.")
+
         self.payment_requests_repo.upsert(payment_request)
+        self.logger.info("Inserted to Dynamo.")
 
         forward_payment_request_command = ForwardPaymentRequestToAcquiringBank(
             payment_request.id, payment_request.merchant_id
         )
         self.send_forward_to_acquiring_bank_command_to_queue(forward_payment_request_command)
+        self.logger.info("Published ForwardPaymentRequestToAcquiringBank command to queue.")
+
         return payment_request.id
 
     def forward_payment_request_to_aquiring_bank(self, command: ForwardPaymentRequestToAcquiringBank):

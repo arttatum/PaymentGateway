@@ -123,11 +123,8 @@ class Mapper:
                 continue
 
             if type(value) is not dict:
-                error_message = (
-                    f"Non-standard JSON structure detected. Cannot map {type(value)} to {attribute_mapper.target_type}"
-                )
-                self.logger.info(error_message)
-                raise ValueError(error_message)
+                setattr(instance, attribute_name, attribute_mapper.target_type(value))
+                continue
 
             setattr(instance, attribute_name, attribute_mapper.from_json(value))
             continue

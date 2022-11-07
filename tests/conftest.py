@@ -68,7 +68,17 @@ def property_values_are_equal(some_object, another_object):
 
 @pytest.fixture(scope="session")
 def make_api_gateway_event() -> dict:
-    def build_api_gateway_event(payload: dict = {}, path_parameters: dict = {"merchant_id": str(uuid.uuid4())}):
+    default_post_payment_request_body = {
+        "card_number": "123456123456",
+        "cvv": "374",
+        "expiry_date": "12-26",
+        "amount": 99.99,
+        "currency": "POUNDS",
+    }
+
+    def build_api_gateway_event(
+        payload: dict = default_post_payment_request_body, path_parameters: dict = {"merchant_id": str(uuid.uuid4())}
+    ):
         return {
             "resource": "",
             "path": "",
