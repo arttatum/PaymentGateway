@@ -2,6 +2,7 @@ import os
 
 import boto3
 
+from application.clients.AcquiringBankClient import AcquiringBankClient
 from application.mapping.mapper import Mapper
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
 from core.commands.ForwardPaymentRequestToAcquiringBank import (
@@ -14,11 +15,11 @@ from shared_kernel.lambda_logging.set_up_logger import get_logger
 
 
 class PaymentRequestService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.payment_requests_repo = PaymentRequestsRepository()
         self.logger = get_logger()
 
-    def submit_payment_request(self, command: SubmitPaymentRequest):
+    def submit_payment_request(self, command: SubmitPaymentRequest) -> str:
         payment_request = PaymentRequest(command)
         self.logger.info("Created new Payment Request.")
 
@@ -33,21 +34,36 @@ class PaymentRequestService:
 
         return payment_request.id
 
-    def forward_payment_request_to_aquiring_bank(self, command: ForwardPaymentRequestToAcquiringBank):
+    def forward_payment_request_to_aquiring_bank(
+        self, command: ForwardPaymentRequestToAcquiringBank
+    ) -> None:
         # get payment request aggregate root
-        # transform to payload expected by aquiring bank
-        # send over http
-        # call method on payment request: mark_as_forwarded_to_acquiring_bank
-        # update payment request aggregate root
-        pass
+        payment_request = self.payment_requests_repo.get_by_aggregate_root_id(
+            command.payment_request_id
+        )
 
-    def process_aquiring_bank_response(self, command: ProcessAquiringBankResponse):
+        # For (poor man's) idempotency... and reporting of status via merchant's GET endpoint
+        if payment_request.is_sent_to_acquiring_bank:
+            return
+
+        # If transformation to schema required by Acquiring Bank were
+        # required, this would be the place to do it.
+
+        acquiring_bank_client = AcquiringBankClient()
+        acquiring_bank_client.post_payment_request(payment_request)
+
+        payment_request.mark_as_forwarded_to_acquiring_bank()
+        self.payment_requests_repo.upsert(payment_request)
+
+    def process_aquiring_bank_response(self, command: ProcessAquiringBankResponse) -> None:
         # get payment request aggregate root
         # call method on object: process_aquiring_bank_response
         # update payment request aggregate root
         pass
 
-    def send_forward_to_acquiring_bank_command_to_queue(self, command: ForwardPaymentRequestToAcquiringBank):
+    def send_forward_to_acquiring_bank_command_to_queue(
+        self, command: ForwardPaymentRequestToAcquiringBank
+    ) -> None:
         """TECH DEBT: this mechanism could be refactored behind an abstraction as required.
 
         Args:
@@ -56,4 +72,4 @@ class PaymentRequestService:
         queue_name = os.environ["PAYMENT_REQUESTS_TO_FORWARD_QUEUE_NAME"]
         sqs_resource = boto3.resource("sqs")
         payments_to_forward_queue = sqs_resource.get_queue_by_name(QueueName=queue_name)
-        payments_to_forward_queue.send_message(MessageBody=Mapper.object_to_string(command))
+        payments_to_forward_queue.send_message(MessageBody=Mapper.object_to_json_string(command))
