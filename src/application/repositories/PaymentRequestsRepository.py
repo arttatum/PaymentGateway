@@ -38,13 +38,11 @@ class PaymentRequestsRepository:
             self.payment_requests_table.put_item(Item=Mapper.object_to_dict(payment_request))
             self.logger.debug("Saved PaymentRequest in database.")
         except Exception as e:
-            self.logger.error(
-                f"Failed to save PaymentRequest in database, due to exception: {e.__class__.__name__}"
-            )
+            self.logger.error(f"Failed to save PaymentRequest in database: {e.__class__.__name__}")
             self.logger.debug(f"Exception: {e}")
             raise e
 
-    def get_by_aggregate_root_id(self, payment_request_id) -> PaymentRequest:
+    def get_by_aggregate_root_id(self, payment_request_id: str) -> PaymentRequest:
         try:
             payment_request_item = self.payment_requests_table.get_item(
                 Key={

@@ -1,6 +1,8 @@
 import uuid
 from unittest.mock import patch
 
+import pytest
+
 from application.lambdas.SubmitPaymentRequest.lambda_function import lambda_handler
 from application.services.PaymentRequestService import PaymentRequestService
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
@@ -43,6 +45,23 @@ def test_SubmitPaymentRequest_returns_400_if_initialisation_of_command_raises_do
 
     mock_command_init.assert_called_once()
     mock_service_submit_payment_request.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "required_field", ["card_number", "expiry_date", "amount", "currency", "cvv"]
+)
+def test_SubmitPaymentRequest_returns_400_if_required_fields_missing(
+    required_field,
+    make_api_gateway_event,
+    make_lambda_context_object,
+):
+    event = make_api_gateway_event(field_to_remove=required_field)
+    context = make_lambda_context_object("SubmitPaymentRequest")
+
+    response = lambda_handler(event, context)
+
+    assert response["statusCode"] == 400
+    assert response["body"] == f"Missing required field: '{required_field}'"
 
 
 @patch.object(PaymentRequestService, "submit_payment_request")

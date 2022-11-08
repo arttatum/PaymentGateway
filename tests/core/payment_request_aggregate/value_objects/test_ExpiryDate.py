@@ -18,6 +18,12 @@ def test_is_in_past_returns_True_for_historic_expiry_date():
     assert expiry_date.is_in_past()
 
 
+def test_is_in_past_but_this_year_returns_True_for_historic_expiry_date():
+    past_expiry_date = "08-22"
+    expiry_date = ExpiryDate(past_expiry_date)
+    assert expiry_date.is_in_past()
+
+
 def test_is_in_past_returns_False_for_future_expiry_date():
     future_expiry_date = "08-35"
     expiry_date = ExpiryDate(future_expiry_date)

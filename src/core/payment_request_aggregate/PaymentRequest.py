@@ -1,4 +1,7 @@
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
+from core.payment_request_aggregate.value_objects.AcquiringBankResponse import (
+    AcquiringBankResponse,
+)
 from core.payment_request_aggregate.value_objects.CardNumber import CardNumber
 from core.payment_request_aggregate.value_objects.CVV import CVV
 from core.payment_request_aggregate.value_objects.ExpiryDate import ExpiryDate
@@ -43,6 +46,7 @@ class PaymentRequest(AggregateRoot):
             self.add_domain_exception(e)
 
         self.is_sent_to_acquiring_bank = False
+        self.acquiring_bank_response = None
 
         if self.domain_exceptions_raised():
             self.raise_domain_exceptions()
@@ -50,5 +54,16 @@ class PaymentRequest(AggregateRoot):
     def mark_as_forwarded_to_acquiring_bank(self):
         self.is_sent_to_acquiring_bank = True
 
-    def process_acquiring_bank_response(self):
-        pass
+    def process_acquiring_bank_response(self, response: AcquiringBankResponse):
+        """Processes response from acquiring bank.
+
+        Assumption has been made thatthe bank provides a
+        string containing the status in a request body, and
+        we simply need to store that string as the new status
+        of the PaymentRequest.
+
+        Args:
+            response (str): Response recieved by AcquiringBank
+        """
+
+        self.acquiring_bank_response = response

@@ -3,7 +3,11 @@ from shared_kernel.ValueObject import ValueObject
 
 
 class Currency(ValueObject):
-    _supported_currencies = ["POUNDS", "EUROS", "DOLLARS"]
+    POUNDS = "POUNDS"
+    EUROS = "EUROS"
+    DOLLARS = "DOLLARS"
+
+    _supported_currencies = [POUNDS, EUROS, DOLLARS]
 
     def __init__(self, currency: str):
         if currency not in Currency._supported_currencies:

@@ -96,10 +96,14 @@ def make_api_gateway_event() -> dict:
     }
 
     def build_api_gateway_event(
-        payload: dict = default_post_payment_request_body,
+        field_to_remove: str = None,
+        payload: dict = default_post_payment_request_body.copy(),
         path_parameters: dict = {"merchant_id": str(uuid.uuid4())},
     ):
-        return {
+        if field_to_remove:
+            field_to_add_back = payload.pop(field_to_remove)
+
+        output = {
             "resource": "",
             "path": "",
             "pathParameters": path_parameters,
@@ -108,6 +112,11 @@ def make_api_gateway_event() -> dict:
             "requestContext": {"resourcePath": "", "httpMethod": ""},
             "body": json.dumps(payload),
         }
+
+        if field_to_remove:
+            payload[field_to_remove] = field_to_add_back
+
+        return output
 
     return build_api_gateway_event
 
