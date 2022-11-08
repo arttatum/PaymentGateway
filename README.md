@@ -1,8 +1,8 @@
-# PaymentGateway
+# Payment Gateway
 
 A simple MVP for a payment gateway.
 
-# Features:
+## Features:
 
 - Make a Payment Request as a Merchant.
 
@@ -12,6 +12,14 @@ A simple MVP for a payment gateway.
 
 - Get the latest status of a Payment Request as a Merchant.
 
+
+## What I have delivered today, what I would deliver given more time
+
+The below diagrams illustrate how I would suggest deploying this solution, given more time. The designs aim to optimise for performance, security, scalability, and cost.
+
+For expediency, I have focussed solely on the Lambdas at the core of these designs, the DynamoDB table, and the SQS queue that decouples accepting payment requests from merchants and forwarding them on to an Acquiring Bank.
+
+To enable testing and demonstration in a local environment, without requiring provisioning and deployment to an AWS environemnt, I have opted to use localstack[https://localstack.cloud/].
 
 ### Merchant Makes Payment Request
 
@@ -52,22 +60,26 @@ Enter the root directory of the repository in your terminal, then run `make unit
 
 `make pretty`
 
+## Running the system using localstack
 
-# Internal Software Design
+TBD
 
-## Domain Driven Design
+## Internal Software Design
+
+### Domain Driven Design
 
 Some tactical patterns of domain driven design are employed here: Aggregate / Value Object / Repository / Command / Application Service.
 
 Due to the time constraints when building this system and the nature of Python, properly implementing these patterns was out of scope, but their spirit lives on (I hope)!
 
 
-# Hexagonal Architecture / Ports and Adapters
+### Hexagonal Architecture / Ports and Adapters
 
 The core of the system is expressed in infrastructure ignorant terms.
 
 Requests are routed to Lambdas through various means (SQS, ALB, API Gateway).
 
+Due to this strategy, adding additional Ports (API GW / Load Balancer / Manual Trigger / SQS / ...) or Adapters (to translate external events into commands for domain model) does not have an impact on the core of the system and can be more easily managed.
 
 ## Layers
 
@@ -77,7 +89,7 @@ AWS configuration code (terraform).
 
 ### Application
 
-Driven by Lambda, the core compute technology used.
+Driven by Lambda, the core compute technology used here.
 
 Responsibilities:
 - Interfaces with other AWS services (API GW, SQS, ALB, DynamoDB).

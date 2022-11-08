@@ -86,10 +86,10 @@ class Mapper:
         return self
 
     def from_json(self, json) -> object:
-        """Creates an instance of the configured target_type from json.
+        """Given a dict / json, return an object of type: target_type
 
-        If attribute_mappings were provided, will instantiate those attributes
-        as specified by the Mappers provided.
+        Notably, this maps child attributes to the types declared
+        the using .with_child_attributes(...) method
 
         Args:
             json (dict): json/dict to map.
@@ -145,7 +145,7 @@ class Mapper:
 
     @staticmethod
     def object_to_dict(obj: object) -> dict:
-        """Maps an instance of a class to a dict.
+        """Given an object, returns it's dict (json) representation.
         Useful when trying to persist aggregate roots to json based data stores (dynamodb).
 
         Args:
@@ -158,4 +158,12 @@ class Mapper:
 
     @staticmethod
     def object_to_json_string(obj: object) -> str:
+        """Given an object, returns it's string representation.
+
+        Args:
+            obj (object): the object
+
+        Returns:
+            str: the string representation
+        """
         return json.dumps(obj, default=lambda o: getattr(o, "__dict__", str(o)))

@@ -20,6 +20,22 @@ class PaymentRequestService:
         self.logger = get_logger()
 
     def submit_payment_request(self, command: SubmitPaymentRequest) -> str:
+        """Submit a PaymentRequest.
+
+        Creates the PaymentRequest aggregate, where validation of inputs parameters occurs.
+        Adds the item to Dynamo, and if successful sends a command to SQS that instructs
+        the system that this request must be forwarded to the Acquiring Bank.
+
+        Optimisations that can exist here to improve transactionality and performance include
+        the Transactional Outbox Pattern.
+        https://learn.microsoft.com/en-us/azure/architecture/best-practices/transactional-outbox-cosmos
+
+        Args:
+            command (SubmitPaymentRequest): _
+
+        Returns:
+            str: the new PaymentRequest's ID.
+        """
         payment_request = PaymentRequest(command)
         self.logger.info("Created new Payment Request.")
 
@@ -37,6 +53,19 @@ class PaymentRequestService:
     def forward_payment_request_to_aquiring_bank(
         self, command: ForwardPaymentRequestToAcquiringBank
     ) -> None:
+        """Forwards PaymentRequest to the Acquiring Bank, if it has not already done so.
+
+        A note on idempotency:
+        There exists an edge case where duplicate messages are processed in very quick succession,
+        such that the the aggregate has not yet been updated in dynamo. This may result in duplciates
+        being sent to the Acquiring Bank.
+
+        Better strategies exist to enforce idempotency, such as storing hashes of messages, or pushing
+        that responsibiltiy to SQS itself.
+
+        Args:
+            command (ForwardPaymentRequestToAcquiringBank): Command containing relevant information
+        """
         # get payment request aggregate root
         payment_request = self.payment_requests_repo.get_by_aggregate_root_id(
             command.payment_request_id
@@ -64,7 +93,11 @@ class PaymentRequestService:
     def send_forward_to_acquiring_bank_command_to_queue(
         self, command: ForwardPaymentRequestToAcquiringBank
     ) -> None:
-        """TECH DEBT: this mechanism could be refactored behind an abstraction as required.
+        """Publishes the ForwardPaymentRequestToAcquiringBank command to teh
+        PAYMENT_REQUESTS_TO_FORWARD SQS queue.
+
+        TECH DEBT: The mechanism to send commands to SQS queues
+        could be refactored behind an abstraction as required.
 
         Args:
             command (ForwardPaymentRequestToAcquiringBank): Command to add to the queue
