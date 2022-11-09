@@ -1,8 +1,7 @@
 import os
 
-import boto3
-
 from application.clients.AcquiringBankClient import AcquiringBankClient
+from application.clients.aws import AWSClient
 from application.mapping.mapper import Mapper
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
 from core.commands.ForwardPaymentRequestToAcquiringBank import (
@@ -108,6 +107,6 @@ class PaymentRequestService:
             command (ForwardPaymentRequestToAcquiringBank): Command to add to the queue
         """
         queue_name = os.environ["PAYMENT_REQUESTS_TO_FORWARD_QUEUE_NAME"]
-        sqs_resource = boto3.resource("sqs")
+        sqs_resource = AWSClient.get_sqs_resource()
         payments_to_forward_queue = sqs_resource.get_queue_by_name(QueueName=queue_name)
         payments_to_forward_queue.send_message(MessageBody=Mapper.object_to_json_string(command))

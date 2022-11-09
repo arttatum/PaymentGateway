@@ -1,8 +1,8 @@
 import os
 
-import boto3
 import requests
 
+from application.clients.aws import AWSClient
 from application.mapping.payment_request_mapper import Mapper
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from shared_kernel.lambda_logging import get_logger
@@ -20,6 +20,10 @@ class AcquiringBankClient:
         self.api_post_payment_request_url = os.environ["ACQUIRING_BANK_POST_PAYMENT_REQUEST_URL"]
 
     def post_payment_request(self, payment_request: PaymentRequest):
+        if os.environ.get("LOCALSTACK_HOSTNAME"):
+            self.logger.info("In localstack, returning with success")
+            return
+
         response = requests.post(
             self.api_post_payment_request_url,
             timeout=30,
@@ -37,7 +41,7 @@ class AcquiringBankClient:
     def _get_api_key(self):
         try:
             api_key_secret_name = os.environ["ACQUIRING_BANK_API_KEY_SECRET_NAME"]
-            client = boto3.client(service_name="secretsmanager", region_name="eu-west-2")
+            client = AWSClient.get_secretsmanager_client()
             get_secret_response = client.get_secret_value(SecretId=api_key_secret_name)
             return get_secret_response["SecretString"]
         except Exception as e:

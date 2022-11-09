@@ -29,7 +29,6 @@ def lambda_handler(event, context):
     add_context(logger, "merchant_id", merchant_id)
 
     payload = json.loads(event["body"])
-
     try:
         (card_number, expiry_date, amount, currency, cvv) = _get_fields_from_payload(payload)
     except KeyError as ke:
