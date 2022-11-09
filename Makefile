@@ -10,6 +10,10 @@ activate_venv=.venv/bin/activate
 .PHONY: clean
 clean:
 	@rm -Rf .venv/
+	@rm -Rf dependencies
+	@rm -Rf *.zip
+	@rm -Rf .pytest_cache
+	@rm -Rf .coverage
 
 
 .PHONY: unit

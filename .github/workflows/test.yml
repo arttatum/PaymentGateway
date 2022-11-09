@@ -1,0 +1,28 @@
+name: Just testing
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:      
+      - name: Checkout Code
+        uses: actions/checkout@v3.1.0
+
+      - name: Use Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+        
+      - name: Test
+        run: make unit
+
+      # Other good things to do in deployment pipeline(s):
+      # Linting
+      # Security scanning
+      # Infra deployment
+      # Triggering certain pipeliens on merge
+      # Triggering other pipelines PR
+      # End to end testing
