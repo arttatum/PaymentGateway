@@ -57,13 +57,13 @@ class PaymentRequest(AggregateRoot):
     def process_acquiring_bank_response(self, response: AcquiringBankResponse):
         """Processes response from acquiring bank.
 
-        Assumption has been made thatthe bank provides a
-        string containing the status in a request body, and
-        we simply need to store that string as the new status
+        Assumption has been made that the bank provides a string
+        from an agreed upon set of values.
+        We simply need to store that string as the new status
         of the PaymentRequest.
 
         Args:
-            response (str): Response recieved by AcquiringBank
+            response (AcquiringBankResponse): Response recieved by AcquiringBank
         """
 
         self.acquiring_bank_response = response

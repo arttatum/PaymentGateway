@@ -1,6 +1,5 @@
 from shared_kernel.Command import Command
 
-
 class SubmitPaymentRequest(Command):
     """
     Command sent by Merchant when making a Payment Request.

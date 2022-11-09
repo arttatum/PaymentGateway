@@ -69,9 +69,10 @@ def test_init_PaymentRequest_with_several_invalid_arguments_raises_domain_except
         AcquiringBankResponse.INSUFFICIENT_CREDIT,
     ],
 )
-def test_mark_as_forwarded_to_acquiring_bank_updates_is_sent_to_bank_flag(
+def test_process_acquiring_bank_response_sets_value_for_valid_statuses(
     valid_response_message_from_bank,
 ):
+    # Given
     merchant_id = str(uuid.uuid4())
     card_number = "12345671234567"
     expiry_date = "08-32"
@@ -85,8 +86,10 @@ def test_mark_as_forwarded_to_acquiring_bank_updates_is_sent_to_bank_flag(
 
     payment_request = PaymentRequest(submit_command)
     payment_request.mark_as_forwarded_to_acquiring_bank()
-
     response_from_bank = AcquiringBankResponse(valid_response_message_from_bank)
+
+    # When
     payment_request.process_acquiring_bank_response(response_from_bank)
 
+    # Then
     assert payment_request.acquiring_bank_response.value == valid_response_message_from_bank

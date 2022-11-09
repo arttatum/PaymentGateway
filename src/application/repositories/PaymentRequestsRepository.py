@@ -11,15 +11,12 @@ from shared_kernel.lambda_logging import get_logger
 
 class PaymentRequestsRepository:
     def __init__(self):
-        payment_requests_table_name = os.environ["PAYMENT_REQUESTS_DYNAMODB_TABLE_NAME"]
+        self.payment_requests_table_name = os.environ["PAYMENT_REQUESTS_DYNAMODB_TABLE_NAME"]
         self.logger = get_logger()
-        self.payment_requests_table = boto3.resource("dynamodb").Table(payment_requests_table_name)
+        self.payment_requests_table = boto3.resource("dynamodb").Table(self.payment_requests_table_name)
 
     def upsert(self, payment_request: PaymentRequest) -> None:
-        """Insert or overwrite.
-
-        Why?
-        Simple way to achieve idempotency.
+        """Inserts or overwrites.
 
         Args:
             PaymentRequest (PaymentRequest): PaymentRequest to insert or overwrite in dynamodb.
@@ -36,7 +33,7 @@ class PaymentRequestsRepository:
 
         try:
             self.payment_requests_table.put_item(Item=Mapper.object_to_dict(payment_request))
-            self.logger.debug("Saved PaymentRequest in database.")
+            self.logger.info(f"Saved PaymentRequest to {self.payment_requests_table_name}")
         except Exception as e:
             self.logger.error(f"Failed to save PaymentRequest in database: {e.__class__.__name__}")
             self.logger.debug(f"Exception: {e}")
@@ -49,11 +46,11 @@ class PaymentRequestsRepository:
                     "id": payment_request_id,
                 }
             )["Item"]
-            self.logger.debug("Retrieved PaymentRequest from database.")
+            self.logger.info(f"Retrieved PaymentRequest from {self.payment_requests_table_name}")
         except KeyError:
             # "Item" attribute is not present if no record was discovered in dynamodb.
             # Hence Key Error => NotFound
-            message = "Failed to get PaymentRequest from dynamo: the PaymentRequest was not found."
+            message = f"PaymentRequest not found in {self.payment_requests_table_name}"
             self.logger.error(message)
             raise NotFound()
         except Exception as e:

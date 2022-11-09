@@ -12,7 +12,7 @@ from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankRespons
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from shared_kernel.lambda_logging.set_up_logger import get_logger
-
+from core.payment_request_aggregate.value_objects.AcquiringBankResponse import AcquiringBankResponse
 
 class PaymentRequestService:
     def __init__(self) -> None:
@@ -45,10 +45,20 @@ class PaymentRequestService:
         forward_payment_request_command = ForwardPaymentRequestToAcquiringBank(
             payment_request.id, payment_request.merchant_id
         )
-        self.send_forward_to_acquiring_bank_command_to_queue(forward_payment_request_command)
+        self._send_forward_to_acquiring_bank_command_to_queue(forward_payment_request_command)
         self.logger.info("Published ForwardPaymentRequestToAcquiringBank command to queue.")
 
         return payment_request.id
+
+
+    def process_aquiring_bank_response(self, command: ProcessAquiringBankResponse) -> None:
+        payment_request = self.payment_requests_repo.get_by_aggregate_root_id(
+            command.payment_request_id
+        )
+        response = AcquiringBankResponse(command.response)
+        payment_request.process_acquiring_bank_response(response)
+        self.payment_requests_repo.upsert(payment_request)
+
 
     def forward_payment_request_to_aquiring_bank(
         self, command: ForwardPaymentRequestToAcquiringBank
@@ -84,13 +94,7 @@ class PaymentRequestService:
         payment_request.mark_as_forwarded_to_acquiring_bank()
         self.payment_requests_repo.upsert(payment_request)
 
-    def process_aquiring_bank_response(self, command: ProcessAquiringBankResponse) -> None:
-        # get payment request aggregate root
-        # call method on object: process_aquiring_bank_response
-        # update payment request aggregate root
-        pass
-
-    def send_forward_to_acquiring_bank_command_to_queue(
+    def _send_forward_to_acquiring_bank_command_to_queue(
         self, command: ForwardPaymentRequestToAcquiringBank
     ) -> None:
         """Publishes the ForwardPaymentRequestToAcquiringBank command to teh

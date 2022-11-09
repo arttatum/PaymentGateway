@@ -1,4 +1,6 @@
-class ForwardPaymentRequestToAcquiringBank:
+from shared_kernel.Command import Command
+
+class ForwardPaymentRequestToAcquiringBank(Command):
     """
     Command that is made after successfully handling a SubmitPaymentRequest command.
     Decouples initiation from forwarding of Payment Requests, increasing availability of the PaymentRequest gateway.

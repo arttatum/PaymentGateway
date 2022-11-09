@@ -31,5 +31,5 @@ class PaymentRequestMapper:
 
     @staticmethod
     def from_json(PaymentRequest_json: dict) -> PaymentRequest:
-        get_logger().info("Mapping item from dynamodb table to PaymentRequest model.")
+        get_logger().info("Mapping JSON to PaymentRequest model.")
         return PaymentRequestMapper.mapper.from_json(PaymentRequest_json)
