@@ -1,0 +1,14 @@
+{
+    "resource": "",
+    "path": "",
+    "httpMethod": "",
+    "headers": {},
+    "requestContext": {
+        "resourcePath": "",
+        "httpMethod": ""
+    },
+    "pathParameters": {
+        "payment_request_id": "a7de693b-3f40-4fd2-8ae0-5167a88163bc",
+        "merchant_id": "0b20e14d-0122-4b60-824a-fcc4c2a3b52a"
+    }
+}

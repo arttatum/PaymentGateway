@@ -41,7 +41,7 @@ follow_localstack_logs:
 
 .PHONY: get_number_of_dead_letters
 get_number_of_dead_letters:
-	echo "Number of Dead Letters..."
+	printf "\nNumber of Dead Letters..."
 	@aws --endpoint-url=http://localhost:4566 \
 	sqs get-queue-attributes --queue-url https://sqs.eu-west-2.amazonaws.com/000000000000/forward-payment-request-to-acquiring-bank-dlq \
 	--attribute-names ApproximateNumberOfMessages
@@ -57,8 +57,21 @@ invalid_payment_request:
 	--region eu-west-2 \
 	infrastructure/responses/SubmitPaymentRequest_invalid.response.log  \
 	--log-type Tail --query 'LogResult' --output text |  base64 -d
-	@echo "☠☠☠ The Payment Request was invalid ☠☠☠"
+	@printf "\n\n☠☠☠ The Payment Request was invalid ☠☠☠\n\n"
 	cat responses/SubmitPaymentRequest_invalid.response.log
+
+.PHONY: get_payment_request_status
+get_payment_request_status:
+	cd ..; . $(activate_venv); \
+	aws --endpoint-url=http://localhost:4566 \
+	lambda invoke --function-name GetPaymentStatus \
+	--profile local \
+	--payload file://infrastructure/lambda_events/GetPaymentStatus.json \
+	--region eu-west-2 \
+	infrastructure/responses/GetPaymentStatus.response.log  \
+	--log-type Tail --query 'LogResult' --output text |  base64 -d
+	@printf "\n\n✅✅✅ Retrieved status of Payment request ✅✅✅\n\n"
+	@cat responses/GetPaymentStatus.response.log
 
 .PHONY: dump_dynamo
 dump_dynamo:

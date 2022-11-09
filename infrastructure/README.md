@@ -50,6 +50,10 @@ This will generate a new PaymentRequest. The ID can be found in the SubmitPaymen
 
 To view this in action, run `make invalid_payment_request`
 
+### Get status of a PaymentRequest as a Merchant
+
+To view this in action, run `make get_payment_request_status`
+
 
 ### Read contents of DynamoDB
 
