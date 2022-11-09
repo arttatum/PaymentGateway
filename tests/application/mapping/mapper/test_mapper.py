@@ -72,3 +72,9 @@ def test_value_error_raised_if_list_expected_but_non_list_received(not_a_list, b
         _ = book_mapper.from_json(book_json)
 
     assert "The mapper was configured to process a list, but" in str(e.value)
+
+
+@pytest.mark.parametrize("not_a_dict", [1, "abc", ("hi", "bye")])
+def test_from_json_raises_TypeError_if_not_provided_with_dict(not_a_dict):
+    with pytest.raises(TypeError):
+        Mapper().from_json(not_a_dict)

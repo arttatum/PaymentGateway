@@ -1,6 +1,8 @@
 import os
 import uuid
+from unittest.mock import patch
 
+import boto3
 import pytest
 
 from application.repositories.exceptions.NotFound import NotFound
@@ -128,3 +130,44 @@ def test_PaymentRequestRepository_get_by_aggregate_root_id_returns_what_was_save
     assert type(payment_request_from_repo) == PaymentRequest
     assert type(payment_request_from_repo.card_number) == CardNumber
     assert type(payment_request_from_repo.cvv) == CVV
+
+
+class BrokenDynamoDBResource:
+    def Table(self, *args, **kwargs):
+        return BrokenDynamoDBTable()
+
+
+class BrokenDynamoDBTable:
+    def get_item(self, *args, **kwargs):
+        raise Exception("Get Item raised an Exception")
+
+    def put_item(self, *args, **kwargs):
+        raise Exception("Put Item raised an Exception")
+
+
+@patch.object(boto3, "resource")
+def test_PaymentRequestRepository_upsert_bubbles_exceptions_from_boto(mock_boto3, payment_request):
+    # Given
+    mock_boto3.return_value = BrokenDynamoDBResource()
+
+    repo = PaymentRequestsRepository()
+
+    with pytest.raises(Exception) as e:
+        repo.upsert(payment_request)
+
+    assert "Put Item raised an Exception" in str(e.value)
+
+
+@patch.object(boto3, "resource")
+def test_PaymentRequestRepository_get_by_aggregate_root_id_bubbles_exceptions_from_boto(
+    mock_boto3, payment_request
+):
+    # Given
+    mock_boto3.return_value = BrokenDynamoDBResource()
+
+    repo = PaymentRequestsRepository()
+
+    with pytest.raises(Exception) as e:
+        repo.get_by_aggregate_root_id(payment_request.id)
+
+    assert "Get Item raised an Exception" in str(e.value)
