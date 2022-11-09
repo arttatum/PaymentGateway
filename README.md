@@ -62,7 +62,7 @@ Enter the root directory of the repository in your terminal, then run `make unit
 
 ## Running the system using localstack
 
-TBD
+See the README in the infrastructure folder.
 
 ## Internal Software Design
 

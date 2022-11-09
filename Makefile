@@ -31,8 +31,4 @@ pretty: .venv
 
 .PHONY: lint
 lint: .venv
-	. $(activate_venv); flake8 . --count --show-source --statistics --max-complexity=13 --max-line-length=120 --exclude .venv,packages
-
-.PHONY: deployable_zip
-deployable_zip:
-	source make_lambda_zip.sh
+	. $(activate_venv); flake8 . --count --show-source --statistics --max-complexity=13 --max-line-length=120 --exclude .venv,dependencies

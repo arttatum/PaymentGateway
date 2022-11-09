@@ -38,17 +38,16 @@ class PaymentRequestService:
         Returns:
             str: the new PaymentRequest's ID.
         """
+        self.logger.info("Creating new Payment Request.")
         payment_request = PaymentRequest(command)
-        self.logger.info("Created new Payment Request.")
 
         self.payment_requests_repo.upsert(payment_request)
-        self.logger.info("Inserted to Dynamo.")
 
         forward_payment_request_command = ForwardPaymentRequestToAcquiringBank(
-            payment_request.id, payment_request.merchant_id
+            payment_request.id, payment_request.merchant_id.value
         )
         self._send_forward_to_acquiring_bank_command_to_queue(forward_payment_request_command)
-        self.logger.info("Published ForwardPaymentRequestToAcquiringBank command to queue.")
+        self.logger.info("Published ForwardPaymentRequestToAcquiringBank command to SQS.")
 
         return payment_request.id
 
@@ -83,6 +82,7 @@ class PaymentRequestService:
 
         # For (poor man's) idempotency... and reporting of status via merchant's GET endpoint
         if payment_request.is_sent_to_acquiring_bank:
+            self.logger.info("PaymentRequest already forwarded to Acquiring Bank.")
             return
 
         # If transformation to schema required by Acquiring Bank were

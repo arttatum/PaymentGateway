@@ -10,9 +10,9 @@ from shared_kernel.lambda_logging.decorators import (
 from shared_kernel.lambda_logging.set_up_logger import add_context, get_logger
 
 
+@configure_lambda_logger
 @return_500_for_unhandled_exceptions
 @return_400_for_domain_exceptions
-@configure_lambda_logger
 def lambda_handler(event, context):
     logger = get_logger()
     payload = json.loads(event["body"])

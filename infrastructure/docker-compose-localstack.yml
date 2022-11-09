@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_payment_gateway}"
+    image: localstack/localstack:0.14.3
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - DEBUG=${DEBUG-1}
+      - PERSISTENCE=${PERSISTENCE-}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"

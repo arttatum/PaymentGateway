@@ -16,12 +16,15 @@ class AcquiringBankClient:
 
     def __init__(self):
         self.logger = get_logger()
-        self.api_key = self._get_api_key()
-        self.api_post_payment_request_url = os.environ["ACQUIRING_BANK_POST_PAYMENT_REQUEST_URL"]
+        if not os.environ.get("LOCALSTACK_HOSTNAME"):
+            self.api_key = self._get_api_key()
+            self.api_post_payment_request_url = os.environ[
+                "ACQUIRING_BANK_POST_PAYMENT_REQUEST_URL"
+            ]
 
     def post_payment_request(self, payment_request: PaymentRequest):
         if os.environ.get("LOCALSTACK_HOSTNAME"):
-            self.logger.info("In localstack, returning with success")
+            self.logger.info("In localstack, continuing without sending request to Acquiring Bank.")
             return
 
         response = requests.post(

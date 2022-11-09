@@ -1,0 +1,14 @@
+{
+    "resource": "",
+    "path": "",
+    "httpMethod": "",
+    "headers": {},
+    "requestContext": {
+        "resourcePath": "",
+        "httpMethod": ""
+    },
+    "pathParameters": {
+        "merchant_id": "0b20e14d-0122-4b60-824a-fcc4c2a3b52a"
+    },
+    "body": "{\"card_number\": \"123456123456\", \"cvv\": \"374\", \"expiry_date\": \"12-26\", \"amount\": 99.99, \"currency\": \"POUNDS\"}"
+}

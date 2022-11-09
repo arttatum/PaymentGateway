@@ -34,7 +34,9 @@ class PaymentRequestsRepository:
 
         try:
             self.payment_requests_table.put_item(Item=Mapper.object_to_dict(payment_request))
-            self.logger.info(f"Saved PaymentRequest to {self.payment_requests_table_name}")
+            self.logger.info(
+                f"Created or updated PaymentRequest in the {self.payment_requests_table_name} table."
+            )
         except Exception as e:
             self.logger.error(f"Failed to save PaymentRequest in database: {e.__class__.__name__}")
             self.logger.debug(f"Exception: {e}")
@@ -47,15 +49,17 @@ class PaymentRequestsRepository:
                     "id": payment_request_id,
                 }
             )["Item"]
-            self.logger.info(f"Retrieved PaymentRequest from {self.payment_requests_table_name}")
+            self.logger.info(
+                f"Retrieved PaymentRequest from {self.payment_requests_table_name} table."
+            )
         except KeyError:
             # "Item" attribute is not present if no record was discovered in dynamodb.
             # Hence Key Error => NotFound
-            message = f"PaymentRequest not found in {self.payment_requests_table_name}"
+            message = f"PaymentRequest not found in {self.payment_requests_table_name} table."
             self.logger.error(message)
             raise NotFound()
         except Exception as e:
-            self.logger.error(f"Failed to get PaymentRequest from database: {e.__class__.__name__}")
+            self.logger.error(f"Failed to get PaymentRequest from {e.__class__.__name__} table.")
             self.logger.debug(f"Exception: {e}")
             raise e
 

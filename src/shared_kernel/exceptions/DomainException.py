@@ -10,3 +10,6 @@ class DomainException(Exception):
         for message in messages:
             instance.messages.append(message)
         return instance
+
+    def __str__(self):
+        return " / ".join(self.messages)

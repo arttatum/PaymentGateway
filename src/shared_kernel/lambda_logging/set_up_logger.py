@@ -32,7 +32,7 @@ def configure_context_logger(*args, **kwargs):
     logger.setLevel(_get_environment_variable_log_level())
 
     if os.environ.get("QUIET_LOGS"):
-        formatter = jsonlogger.JsonFormatter(fmt="%(levelname)s %(message)s")
+        formatter = jsonlogger.JsonFormatter(fmt="%(message)s")
     else:
         formatter = jsonlogger.JsonFormatter(fmt="%(levelname)s %(message)s", timestamp=True)
 
@@ -58,7 +58,8 @@ def add_context(logger: LoggerAdapter, key: str, value: object):
         key (str): name of attribute to display in log records
         value (object / any): value of attribute to display in log records
     """
-    logger.extra[key] = value
+    if not os.environ.get("QUIET_LOGS"):
+        logger.extra[key] = value
 
 
 def get_logger():
