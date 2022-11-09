@@ -2,6 +2,9 @@ from decimal import Decimal
 
 from application.mapping.mapper import Mapper
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
+from core.payment_request_aggregate.value_objects.AcquiringBankResponse import (
+    AcquiringBankResponse,
+)
 from core.payment_request_aggregate.value_objects.CardNumber import CardNumber
 from core.payment_request_aggregate.value_objects.Currency import Currency
 from core.payment_request_aggregate.value_objects.CVV import CVV
@@ -27,6 +30,7 @@ class PaymentRequestMapper:
         amount=Mapper.for_type(MonetaryAmount).with_attribute_mappings(
             currency=Mapper.for_type(Currency), amount=Mapper.for_type(Decimal)
         ),
+        acquiring_bank_response=Mapper.for_type(AcquiringBankResponse),
     )
 
     @staticmethod

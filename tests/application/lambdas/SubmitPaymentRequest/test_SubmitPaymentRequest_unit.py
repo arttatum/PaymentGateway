@@ -11,9 +11,11 @@ from shared_kernel.exceptions.DomainException import DomainException
 
 @patch.object(PaymentRequestService, "submit_payment_request")
 def test_SubmitPaymentRequest_returns_500_if_event_is_invalid(
-    mock_service_submit_payment_request, make_api_gateway_event, make_lambda_context_object
+    mock_service_submit_payment_request,
+    make_api_gateway_event_post_payment,
+    make_lambda_context_object,
 ):
-    event = make_api_gateway_event()
+    event = make_api_gateway_event_post_payment()
     context = make_lambda_context_object("SubmitPaymentRequest")
 
     del event["pathParameters"]
@@ -30,12 +32,12 @@ def test_SubmitPaymentRequest_returns_500_if_event_is_invalid(
 def test_SubmitPaymentRequest_returns_400_if_initialisation_of_command_raises_domain_exception(
     mock_command_init,
     mock_service_submit_payment_request,
-    make_api_gateway_event,
+    make_api_gateway_event_post_payment,
     make_lambda_context_object,
 ):
     mock_command_init.side_effect = DomainException("Price cannot be negative.")
 
-    event = make_api_gateway_event()
+    event = make_api_gateway_event_post_payment()
     context = make_lambda_context_object("SubmitPaymentRequest")
 
     response = lambda_handler(event, context)
@@ -52,10 +54,10 @@ def test_SubmitPaymentRequest_returns_400_if_initialisation_of_command_raises_do
 )
 def test_SubmitPaymentRequest_returns_400_if_required_fields_missing(
     required_field,
-    make_api_gateway_event,
+    make_api_gateway_event_post_payment,
     make_lambda_context_object,
 ):
-    event = make_api_gateway_event(field_to_remove=required_field)
+    event = make_api_gateway_event_post_payment(field_to_remove=required_field)
     context = make_lambda_context_object("SubmitPaymentRequest")
 
     response = lambda_handler(event, context)
@@ -69,14 +71,14 @@ def test_SubmitPaymentRequest_returns_400_if_required_fields_missing(
 def test_SubmitPaymentRequest_returns_201_and_new_payment_request_id_if_successful(
     mock_command_init,
     mock_service_submit_payment_request,
-    make_api_gateway_event,
+    make_api_gateway_event_post_payment,
     make_lambda_context_object,
 ):
     # Given
     new_payment_request_id = str(uuid.uuid4())
     mock_command_init.return_value = None
     mock_service_submit_payment_request.return_value = new_payment_request_id
-    event = make_api_gateway_event()
+    event = make_api_gateway_event_post_payment()
     context = make_lambda_context_object("SubmitPaymentRequest")
 
     # When

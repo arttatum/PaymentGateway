@@ -4,14 +4,14 @@ from application.lambdas.SubmitPaymentRequest.lambda_function import lambda_hand
 
 
 def test_SubmitPaymentRequest_creates_item_in_database_and_publishes_message_to_queue(
-    make_api_gateway_event,
+    make_api_gateway_event_post_payment,
     make_lambda_context_object,
     payment_requests_table,
     payment_requests_to_forward_queue,
 ):
     # Given
     merchant_id = str(uuid.uuid4())
-    event = make_api_gateway_event(path_parameters={"merchant_id": merchant_id})
+    event = make_api_gateway_event_post_payment(path_parameters={"merchant_id": merchant_id})
     context = make_lambda_context_object("SubmitPaymentRequest")
 
     # When

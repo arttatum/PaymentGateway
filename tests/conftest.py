@@ -86,7 +86,7 @@ def property_values_are_equal(some_object, another_object):
 
 
 @pytest.fixture(scope="session")
-def make_api_gateway_event() -> dict:
+def make_api_gateway_event_post_payment() -> dict:
     default_post_payment_request_body = {
         "card_number": "123456123456",
         "cvv": "374",
@@ -117,6 +117,23 @@ def make_api_gateway_event() -> dict:
             payload[field_to_remove] = field_to_add_back
 
         return output
+
+    return build_api_gateway_event
+
+
+@pytest.fixture(scope="session")
+def make_api_gateway_event_get_payment_status() -> dict:
+    def build_api_gateway_event(
+        path_parameters: dict = {},
+    ):
+        return {
+            "resource": "",
+            "path": "",
+            "pathParameters": path_parameters,
+            "httpMethod": "",
+            "headers": {},
+            "requestContext": {"resourcePath": "", "httpMethod": ""},
+        }
 
     return build_api_gateway_event
 
