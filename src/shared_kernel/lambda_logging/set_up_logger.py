@@ -13,8 +13,8 @@ def _get_environment_variable_log_level():
     # This method returns a number when given the name, and a name when given a number
     log_level_number = logging.getLevelName(environment_variable_log_level)
 
-    # Default to INFO if invalid log level is specified in environment variable
-    if log_level_number == "Level %s":
+    # getLevelName returns a string when the argument is not a known log level
+    if type(log_level_number) is not int:
         return logging.INFO
 
     return log_level_number

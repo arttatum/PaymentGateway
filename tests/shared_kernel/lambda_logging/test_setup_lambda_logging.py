@@ -49,3 +49,14 @@ def test_log_level_is_set_by_environment_variable(capsys):
     logs = capsys.readouterr().err
     assert "This record will not be sent to a file descriptor" not in logs
     assert "This will, awesome!" in logs
+
+def test_invalid_log_level_defaults_to_INFO(capsys):
+    os.environ["LOG_LEVEL"] = "HELLO_WORLD"
+    configure_context_logger()
+    logger = get_logger()
+    logger.info("This record will be sent to a file descriptor")
+    logger.debug("This won't be in there, awesome!")
+
+    logs = capsys.readouterr().err
+    assert "This record will be sent to a file descriptor" in logs
+    assert "This won't be in there, awesome!" not in logs
