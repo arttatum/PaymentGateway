@@ -1,4 +1,5 @@
 import functools
+import os
 
 from shared_kernel.exceptions.DomainException import DomainException
 from shared_kernel.lambda_logging.set_up_logger import (
@@ -50,7 +51,10 @@ def configure_lambda_logger(func):
         function_name = context.function_name
         aws_request_id = context.aws_request_id
 
-        configure_context_logger(function_name=function_name, aws_request_id=aws_request_id)
+        if os.environ.get("QUIET_LOGS"):
+            configure_context_logger()
+        else:
+            configure_context_logger(function_name=function_name, aws_request_id=aws_request_id)
 
         logger = get_logger()
         logger.info(f"Started execution of {function_name} lambda.")

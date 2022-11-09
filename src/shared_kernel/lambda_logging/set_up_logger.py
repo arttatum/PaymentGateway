@@ -31,11 +31,13 @@ def configure_context_logger(*args, **kwargs):
     logger.addHandler(logHandler)
     logger.setLevel(_get_environment_variable_log_level())
 
-    formatter = jsonlogger.JsonFormatter(fmt="%(levelname)s %(message)s", timestamp=True)
+    if os.environ.get("QUIET_LOGS"):
+        formatter = jsonlogger.JsonFormatter(fmt="%(levelname)s %(message)s")
+    else:
+        formatter = jsonlogger.JsonFormatter(fmt="%(levelname)s %(message)s", timestamp=True)
 
     logHandler.setFormatter(formatter)
     logger.propagate = False
-
     adapter_data = {}
 
     for argument_name, argument_value in kwargs.items():
