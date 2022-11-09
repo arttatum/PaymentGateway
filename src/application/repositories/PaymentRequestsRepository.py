@@ -13,7 +13,9 @@ class PaymentRequestsRepository:
     def __init__(self):
         self.payment_requests_table_name = os.environ["PAYMENT_REQUESTS_DYNAMODB_TABLE_NAME"]
         self.logger = get_logger()
-        self.payment_requests_table = boto3.resource("dynamodb").Table(self.payment_requests_table_name)
+        self.payment_requests_table = boto3.resource("dynamodb").Table(
+            self.payment_requests_table_name
+        )
 
     def upsert(self, payment_request: PaymentRequest) -> None:
         """Inserts or overwrites.

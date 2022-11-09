@@ -1,5 +1,6 @@
 from shared_kernel.Command import Command
 
+
 class ForwardPaymentRequestToAcquiringBank(Command):
     """
     Command that is made after successfully handling a SubmitPaymentRequest command.

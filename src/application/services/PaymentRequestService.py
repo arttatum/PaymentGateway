@@ -11,8 +11,11 @@ from core.commands.ForwardPaymentRequestToAcquiringBank import (
 from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankResponse
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
+from core.payment_request_aggregate.value_objects.AcquiringBankResponse import (
+    AcquiringBankResponse,
+)
 from shared_kernel.lambda_logging.set_up_logger import get_logger
-from core.payment_request_aggregate.value_objects.AcquiringBankResponse import AcquiringBankResponse
+
 
 class PaymentRequestService:
     def __init__(self) -> None:
@@ -50,7 +53,6 @@ class PaymentRequestService:
 
         return payment_request.id
 
-
     def process_aquiring_bank_response(self, command: ProcessAquiringBankResponse) -> None:
         payment_request = self.payment_requests_repo.get_by_aggregate_root_id(
             command.payment_request_id
@@ -58,7 +60,6 @@ class PaymentRequestService:
         response = AcquiringBankResponse(command.response)
         payment_request.process_acquiring_bank_response(response)
         self.payment_requests_repo.upsert(payment_request)
-
 
     def forward_payment_request_to_aquiring_bank(
         self, command: ForwardPaymentRequestToAcquiringBank
