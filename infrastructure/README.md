@@ -44,7 +44,7 @@ Responses for endpoints that Lambdas that return a value can be found in the /re
 
 To view this in action, run `make valid_payment_request`
 
-This will generate a new PaymentRequest. The ID can be found in the SubmitPaymentRequest.response.log file.
+This will generate a new PaymentRequest. The ID can be found in the SubmitPaymentRequest.txt file.
 
 ### Submit an invalid PaymentRequest as a Merchant
 
@@ -52,11 +52,11 @@ To view this in action, run `make invalid_payment_request`
 
 ### Get status of a PaymentRequest as a Merchant
 
-To view this in action, run `make get_payment_request_status`
+To view this in action, run `make get_payment_request_status PAYMENT_REQUEST_ID=<required_value> MERCHANT_ID=<default_provided> `
 
 ### Provide a status update as the acquiring bank
 
-To view this in action, run `make send_payment_request_response RESPONSE="Status sent by bank"`
+To view this in action, run `make provide_payment_request_update PAYMENT_REQUEST_ID=<required_value> MERCHANT_ID=<default_provided> RESPONSE=<default_provided>`
 
 Valid statuses are: 
 - Processing
@@ -64,7 +64,9 @@ Valid statuses are:
 - Payment could not be reconciled - insufficient credit
 - Payment could not be reconciled - fraud detected
 
+### Simulate broken message consumer to demonstrate DLQ-ing
 
+Run `make break_forward_payment_request`
 
 ### Read contents of DynamoDB
 
@@ -74,4 +76,4 @@ To dump the entire local dynamodb table into a terminal, run: `make dump_dynamo`
 
 #### Query
 
-To query for a specific PaymentRequest, run: `make query_dynamo ID=<the_payment_request_id_found_in_SubmitPaymentRequest.response.log>`
+To query for a specific PaymentRequest, run: `make query_dynamo ID=<payment_request_id>`
