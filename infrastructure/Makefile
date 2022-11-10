@@ -118,9 +118,9 @@ query_dynamo:
 
 .PHONY: break_forward_payment_request
 break_forward_payment_request:
-	@printf "\e[31;1m\n%s\n" "Breaking the ForwardPaymentRequestToAquiringBank lambda configuration!"
+	@printf "\e[31;1m\n%s\n" "Breaking the ForwardPaymentRequestToAcquiringBank lambda configuration!"
 	@aws --endpoint-url=http://localhost:4566 \
-	lambda update-function-configuration --function-name ForwardPaymentRequestToAquiringBank \
+	lambda update-function-configuration --function-name ForwardPaymentRequestToAcquiringBank \
 	--profile local \
 	--region eu-west-2 \
 	--handler "not_a_real_method" > /dev/null 2>&1
@@ -136,7 +136,7 @@ break_forward_payment_request:
 	--log-type Tail --query 'LogResult' --output text |  base64 -d
 
 	@printf "\e[32;1m\n\n%s\n\n" "SubmitPaymentRequest ran to completion! A command was published to an SQS queue."
-	@printf "\e[34;1m\n  %s\n\n" "In the background, the ForwardPaymentRequestToAquiringBank is failing, due to a (deliberate) configuration issue" 
+	@printf "\e[34;1m\n  %s\n\n" "In the background, the ForwardPaymentRequestToAcquiringBank is failing, due to a (deliberate) configuration issue" 
 	@sleep 3
 	@printf "\e[34;1m\n  %s\n\n" "The message it fails to process will be added to the DLQ."
 	@sleep 3
@@ -151,9 +151,9 @@ break_forward_payment_request:
 	--attribute-names ApproximateNumberOfMessages
 	@printf "\e[32;1m\n%s\n\n" "These messages could be automatically replayed, sent through a reconciliation process, and trigger alerts to developers or other systems..."
 
-	@printf "\e[32;1m\n%s\n\n" "Fixing the Lambda configuration for ForwardPaymentRequestToAquiringBank..."
+	@printf "\e[32;1m\n%s\n\n" "Fixing the Lambda configuration for ForwardPaymentRequestToAcquiringBank..."
 	@aws --endpoint-url=http://localhost:4566 \
-	lambda update-function-configuration --function-name ForwardPaymentRequestToAquiringBank \
+	lambda update-function-configuration --function-name ForwardPaymentRequestToAcquiringBank \
 	--profile local \
 	--region eu-west-2 \
-	--handler "application.lambdas.ForwardPaymentRequestToAquiringBank.lambda_function.lambda_handler" > /dev/null 2>&1
+	--handler "application.lambdas.ForwardPaymentRequestToAcquiringBank.lambda_function.lambda_handler" > /dev/null 2>&1

@@ -1,8 +1,8 @@
-resource "aws_lambda_function" "ForwardPaymentRequestToAquiringBank" {
-  function_name    = "ForwardPaymentRequestToAquiringBank"
+resource "aws_lambda_function" "ForwardPaymentRequestToAcquiringBank" {
+  function_name    = "ForwardPaymentRequestToAcquiringBank"
   filename         = "../payment_gateway_lambdas.zip"
   role             = "fake_role" # localstack doesn't support IAM in community edition
-  handler          = "application.lambdas.ForwardPaymentRequestToAquiringBank.lambda_function.lambda_handler"
+  handler          = "application.lambdas.ForwardPaymentRequestToAcquiringBank.lambda_function.lambda_handler"
   runtime          = "python3.9"
   source_code_hash = filebase64sha256("../payment_gateway_lambdas.zip")
   timeout          = 30

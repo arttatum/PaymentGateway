@@ -59,7 +59,7 @@ def test_type_error_raised_if_with_attribute_mappings_argument_is_not_Mapper_typ
     with pytest.raises(TypeError) as e:
         _ = Mapper.for_type(Book).with_attribute_mappings(author=Author)
 
-    assert "Required instance of Mapper, recieved Author" in str(e.value)
+    assert "Required instance of Mapper, received Author" in str(e.value)
 
 
 @pytest.mark.parametrize("not_a_list", [1, "abc", {"key": "value"}])

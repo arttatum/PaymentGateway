@@ -1,7 +1,7 @@
 import json
 
 from application.services.PaymentRequestService import PaymentRequestService
-from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankResponse
+from core.commands.ProcessAcquiringBankResponse import ProcessAcquiringBankResponse
 from shared_kernel.lambda_logging.decorators import (
     configure_lambda_logger,
     return_400_for_domain_exceptions,
@@ -42,9 +42,9 @@ def lambda_handler(event, context):
         logger.debug(payload)
         return {"statusCode": 400, "body": message}
 
-    command = ProcessAquiringBankResponse(payment_request_id, response)
+    command = ProcessAcquiringBankResponse(payment_request_id, response)
 
     service = PaymentRequestService()
-    service.process_aquiring_bank_response(command)
+    service.process_acquiring_bank_response(command)
 
     return {"statusCode": 200, "body": "Success"}

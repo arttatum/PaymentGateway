@@ -80,7 +80,7 @@ class Mapper:
         for attribute_name, attribute_mapper in kwargs.items():
             if not isinstance(attribute_mapper, Mapper):
                 raise TypeError(
-                    f"Required instance of Mapper, recieved {attribute_mapper.__name__}"
+                    f"Required instance of Mapper, received {attribute_mapper.__name__}"
                 )
             self.attribute_mappers[attribute_name] = attribute_mapper
         return self
@@ -118,7 +118,7 @@ class Mapper:
 
             if attribute_mapper.is_list_mapper:
                 if type(value) is not list:
-                    error_message = f"The mapper was configured to process a list, but a {type(value)} was recieved."
+                    error_message = f"The mapper was configured to process a list, but a {type(value)} was received."
                     self.logger.info(error_message)
                     raise ValueError(error_message)
                 self._map_to_list(instance, attribute_name, value, attribute_mapper)

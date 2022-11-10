@@ -4,14 +4,14 @@ from unittest.mock import patch
 
 import pytest
 
-from application.lambdas.ForwardPaymentRequestToAquiringBank.lambda_function import (
+from application.lambdas.ForwardPaymentRequestToAcquiringBank.lambda_function import (
     lambda_handler,
 )
 from application.services.PaymentRequestService import PaymentRequestService
 
 
-@patch.object(PaymentRequestService, "forward_payment_request_to_aquiring_bank")
-def test_lambda_parses_event_and_calls_forward_payment_request_to_aquiring_bank_service_method(
+@patch.object(PaymentRequestService, "forward_payment_request_to_acquiring_bank")
+def test_lambda_parses_event_and_calls_forward_payment_request_to_acquiring_bank_service_method(
     mock_forward_to_bank_service_method, make_lambda_context_object
 ):
     payment_request_id = str(uuid.uuid4())

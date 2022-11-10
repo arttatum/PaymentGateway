@@ -11,7 +11,7 @@ from application.services.PaymentRequestService import PaymentRequestService
 from core.commands.ForwardPaymentRequestToAcquiringBank import (
     ForwardPaymentRequestToAcquiringBank,
 )
-from core.commands.ProcessAquiringBankResponse import ProcessAquiringBankResponse
+from core.commands.ProcessAcquiringBankResponse import ProcessAcquiringBankResponse
 from core.commands.SubmitPaymentRequest import SubmitPaymentRequest
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from core.payment_request_aggregate.value_objects.AcquiringBankResponse import (
@@ -64,7 +64,7 @@ def test_forward_payment_request_to_acquiring_bank_calls_AcquiringBankClient_and
     payment_request_id = service.submit_payment_request(command)
 
     # When
-    service.forward_payment_request_to_aquiring_bank(
+    service.forward_payment_request_to_acquiring_bank(
         ForwardPaymentRequestToAcquiringBank(payment_request_id, merchant_id)
     )
 
@@ -96,11 +96,11 @@ def test_forward_payment_request_to_acquiring_bank_is_mostly_idempotent(
     payment_request_id = service.submit_payment_request(command)
 
     # When
-    service.forward_payment_request_to_aquiring_bank(
+    service.forward_payment_request_to_acquiring_bank(
         ForwardPaymentRequestToAcquiringBank(payment_request_id, merchant_id)
     )
 
-    service.forward_payment_request_to_aquiring_bank(
+    service.forward_payment_request_to_acquiring_bank(
         ForwardPaymentRequestToAcquiringBank(payment_request_id, merchant_id)
     )
 
@@ -108,23 +108,23 @@ def test_forward_payment_request_to_acquiring_bank_is_mostly_idempotent(
     mock_post.assert_called_once()
 
 
-def test_process_aquiring_bank_response_raises_NotFound_if_PaymentRequest_does_not_exist(
+def test_process_acquiring_bank_response_raises_NotFound_if_PaymentRequest_does_not_exist(
     payment_requests_table,
 ):
-    command = ProcessAquiringBankResponse(str(uuid.uuid4()), AcquiringBankResponse.PAID)
+    command = ProcessAcquiringBankResponse(str(uuid.uuid4()), AcquiringBankResponse.PAID)
     service = PaymentRequestService()
     with pytest.raises(NotFound):
-        service.process_aquiring_bank_response(command)
+        service.process_acquiring_bank_response(command)
 
 
-def test_process_aquiring_bank_response_raises_DomainException_if_response_string_not_valid(
+def test_process_acquiring_bank_response_raises_DomainException_if_response_string_not_valid(
     payment_requests_table,
 ):
 
-    command = ProcessAquiringBankResponse(str(uuid.uuid4()), AcquiringBankResponse.PAID)
+    command = ProcessAcquiringBankResponse(str(uuid.uuid4()), AcquiringBankResponse.PAID)
     service = PaymentRequestService()
     with pytest.raises(NotFound):
-        service.process_aquiring_bank_response(command)
+        service.process_acquiring_bank_response(command)
 
 
 def test_process_acquiring_bank_response_updates_PaymentRequest(payment_requests_table):
@@ -145,13 +145,13 @@ def test_process_acquiring_bank_response_updates_PaymentRequest(payment_requests
 
     payment_requests_table.put_item(Item=Mapper.object_to_dict(payment_request))
 
-    process_bank_response_command = ProcessAquiringBankResponse(
+    process_bank_response_command = ProcessAcquiringBankResponse(
         payment_request.id, AcquiringBankResponse.PAID
     )
     service = PaymentRequestService()
 
     # When
-    service.process_aquiring_bank_response(process_bank_response_command)
+    service.process_acquiring_bank_response(process_bank_response_command)
 
     # Then
     payment_request_db_object = payment_requests_table.get_item(Key={"id": payment_request.id})

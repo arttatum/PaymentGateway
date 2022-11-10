@@ -1,7 +1,7 @@
 from shared_kernel.Command import Command
 
 
-class ProcessAquiringBankResponse(Command):
+class ProcessAcquiringBankResponse(Command):
     """
     Command sent by Acquiring Bank when they
     have an update regarding a Payment Request

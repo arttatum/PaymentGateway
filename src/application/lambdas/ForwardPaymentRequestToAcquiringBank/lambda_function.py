@@ -35,5 +35,5 @@ def lambda_handler(event, context):
     logger.info("Formed ForwardPaymentRequestToAcquiringBank command.")
 
     service = PaymentRequestService()
-    service.forward_payment_request_to_aquiring_bank(command_from_queue)
-    logger.info("Forwarded to aquiring bank.")
+    service.forward_payment_request_to_acquiring_bank(command_from_queue)
+    logger.info("Forwarded to acquiring bank.")

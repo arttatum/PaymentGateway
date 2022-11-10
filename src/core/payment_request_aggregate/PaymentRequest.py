@@ -63,7 +63,7 @@ class PaymentRequest(AggregateRoot):
         of the PaymentRequest.
 
         Args:
-            response (AcquiringBankResponse): Response recieved by AcquiringBank
+            response (AcquiringBankResponse): Response received by AcquiringBank
         """
 
         self.acquiring_bank_response = response
