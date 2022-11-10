@@ -54,6 +54,17 @@ To view this in action, run `make invalid_payment_request`
 
 To view this in action, run `make get_payment_request_status`
 
+### Provide a status update as the acquiring bank
+
+To view this in action, run `make send_payment_request_response RESPONSE="Status sent by bank"`
+
+Valid statuses are: 
+- Processing
+- Paid into account
+- Payment could not be reconciled - insufficient credit
+- Payment could not be reconciled - fraud detected
+
+
 
 ### Read contents of DynamoDB
 
