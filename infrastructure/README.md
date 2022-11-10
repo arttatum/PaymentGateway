@@ -4,7 +4,7 @@ Since deploying this solution in AWS properly is beyond the scope of this projec
 
 ## Setup
 
-### Pre-requisites
+## Pre-requisites
 Ensure you have the following tools available:
 
 - terraform
@@ -14,7 +14,7 @@ Ensure you have the following tools available:
 - mac or linux (makefile may not work as intended on windows)
 
 
-### Deploy infrastructure to localstack container
+## Deploy infrastructure to localstack container
 
 Ensure that colima or docker are running.
 
@@ -34,18 +34,17 @@ Following this:
 - The container running localstack will be started.
 - Terraform will deploy the infrastructure to this container.
 
-## Triggering the endpoints
+# Triggering the endpoints
 
-To trigger the Lambdas (that would be integrated with load balancers or API GW), you can use localstack 
-and the AWS CLI. 
-
+To trigger the Lambdas you can use localstack 
+and the AWS CLI.
 
 The Makefile in the infrastructure folder provides pre-configured commands to make this
-simple.
+simple. Responses returned by Lambdas can be found in the /responses folder.
 
-Responses for endpoints that Lambdas that return a value can be found in the /responses folder.
 
-### Submit a valid PaymentRequest as a Merchant
+
+## Submit a valid PaymentRequest as a Merchant
 
 Run `make valid_payment_request`
 
@@ -62,7 +61,9 @@ Terminal output:
 <img width="1792" alt="image" src="https://user-images.githubusercontent.com/58389740/201194703-447ff99f-4417-4b1d-bf9f-65512de46b71.png">
 
 
-### Submit an invalid PaymentRequest as a Merchant
+
+
+## Submit an invalid PaymentRequest as a Merchant
 
 Run `make invalid_payment_request`
 
