@@ -130,7 +130,7 @@ def make_api_gateway_event_post_payment() -> dict:
 
 
 @pytest.fixture(scope="session")
-def make_api_gateway_event_get_payment_status() -> dict:
+def make_api_gateway_event_get_payment_request_status() -> dict:
     def build_api_gateway_event(
         path_parameters: dict = {},
     ):

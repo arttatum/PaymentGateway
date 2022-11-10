@@ -1,4 +1,4 @@
-from application.dtos.GetPaymentStatusDTO import GetPaymentStatusDTO
+from application.dtos.GetPaymentRequestStatusDTO import GetPaymentRequestStatusDTO
 from application.repositories.exceptions.NotFound import NotFound
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
 from shared_kernel.guard_clauses.uuid_guard import is_valid_uuid
@@ -86,20 +86,20 @@ def lambda_handler(event, context):
     if not payment_request.is_sent_to_acquiring_bank:
         return {
             "statusCode": 200,
-            "body": GetPaymentStatusDTO(payment_request, "Processing - In Payment Gateway").json,
+            "body": GetPaymentRequestStatusDTO(payment_request, "Processing - In Payment Gateway").json,
         }
 
     if payment_request.acquiring_bank_response is None:
         return {
             "statusCode": 200,
-            "body": GetPaymentStatusDTO(
+            "body": GetPaymentRequestStatusDTO(
                 payment_request, "Processing - Awaiting response from acquiring bank"
             ).json,
         }
 
     return {
         "statusCode": 200,
-        "body": GetPaymentStatusDTO(
+        "body": GetPaymentRequestStatusDTO(
             payment_request, payment_request.acquiring_bank_response.value
         ).json,
     }

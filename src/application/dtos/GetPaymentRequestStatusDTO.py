@@ -2,9 +2,9 @@ from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from shared_kernel.lambda_logging.set_up_logger import get_logger
 
 
-class GetPaymentStatusDTO:
+class GetPaymentRequestStatusDTO:
     def __init__(self, payment_request: PaymentRequest, status: str):
-        get_logger().info("Forming GetPaymentStatusDTO to return to client.")
+        get_logger().info("Forming GetPaymentRequestStatusDTO to return to client.")
         self.json = {
             "payment_details": {
                 "id": payment_request.id,

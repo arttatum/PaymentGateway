@@ -72,15 +72,15 @@ invalid_payment_request:
 .PHONY: get_payment_request_status
 get_payment_request_status:
 	@aws --endpoint-url=http://localhost:4566 \
-	lambda invoke --function-name GetPaymentStatus \
+	lambda invoke --function-name GetPaymentRequestStatus \
 	--profile local \
 	--payload "{\"pathParameters\": {\"merchant_id\": \"$(MERCHANT_ID)\", \"payment_request_id\": \"$(PAYMENT_REQUEST_ID)\"}}" \
 	--region eu-west-2 \
-	responses/GetPaymentStatus.txt  \
+	responses/GetPaymentRequestStatus.txt  \
 	--log-type Tail --query 'LogResult' --output text |  base64 -d
 	@printf "\e[32;1m\n\n%s\n" "Retrieved status of Payment request!"
 	@printf "\e[34;1m%s\n" "Response:"
-	@cat responses/GetPaymentStatus.txt | python -m json.tool
+	@cat responses/GetPaymentRequestStatus.txt | python -m json.tool
 	@printf "\e[32;3m\n\n%s\n\n" "Next, try running: 'make provide_payment_request_update PAYMENT_REQUEST_ID=<the_id_above>'"
 
 
