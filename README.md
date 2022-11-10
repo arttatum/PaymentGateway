@@ -10,16 +10,24 @@ A simple MVP for a payment gateway.
 
 - Provide update regarding a Payment Request as an Acquiring Bank.
 
-- Get the latest status of a Payment Request as a Merchant.
+- Get the status of a Payment Request as a Merchant.
 
+## Assumptions
+
+I have assumed that the Acquiring Bank will response asynchronously, hence I have modelled a callback endpoint where they provide status updates.
+
+The Acquiring Bank will authenticate our requests through API Keys and Network layer controls (Safelisted AWS Account ID / VPC Endpoint ID).
 
 ## What I have delivered today, what I would deliver given more time
 
-The below diagrams illustrate how I would suggest deploying this solution, given more time. The designs aim to optimise for performance, security, scalability, and cost.
+For expediency, I have implemented: 
+- The Lambdas at the core of these designs
+- The DynamoDB table that stores the PaymentRequest aggregate
+- The SQS queue that decouples accepting a PaymentRequest from a Merchant from forwarding it to the Acquiring Bank.
 
-For expediency, I have focussed solely on the Lambdas at the core of these designs, the DynamoDB table, and the SQS queue that decouples accepting payment requests from merchants and forwarding them on to an Acquiring Bank.
+To enable testing and demonstration in a local environment, without requiring provisioning and deployment to an AWS environemnt, I have opted to use localstack[https://localstack.cloud/]. The README in the infrastructure folder provides detailed instructions on how to set up and run the solution locally.
 
-To enable testing and demonstration in a local environment, without requiring provisioning and deployment to an AWS environemnt, I have opted to use localstack[https://localstack.cloud/].
+The below diagrams illustrate a first draft on how to build this solution for production workloads. The designs aim to optimise for performance, security, scalability, and cost.
 
 ### Merchant Makes Payment Request
 
@@ -93,13 +101,13 @@ Driven by Lambda, the core compute technology used here.
 
 Responsibilities:
 - Interfaces with other AWS services (API GW, SQS, ALB, DynamoDB).
-- Insulates Core of system from external concerns. 
+- Insulates Core of system, the domain model, from external concerns. 
 - Translates incoming requests into Commands (or Queries).
 - Delegates business logic to Core of system.
 
 ### Core
 
-Pure expression of business logic, infrastructure ignorant.
+Pure expression of business logic in a rich domain model, infrastructure ignorant.
 
 The only aggregate modelled here is the PaymentRequest. The Merchant aggregate is referenced by it's ID.
 
