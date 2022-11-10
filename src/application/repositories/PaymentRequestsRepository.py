@@ -1,6 +1,6 @@
 import os
 
-from application.clients.aws import AWSClient
+from application.clients.AWSClient import AWSClient
 from application.mapping.mapper import Mapper
 from application.mapping.payment_request_mapper import PaymentRequestMapper
 from application.repositories.exceptions.NotFound import NotFound

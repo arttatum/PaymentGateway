@@ -1,7 +1,7 @@
 import os
 
 from application.clients.AcquiringBankClient import AcquiringBankClient
-from application.clients.aws import AWSClient
+from application.clients.AWSClient import AWSClient
 from application.mapping.mapper import Mapper
 from application.repositories.PaymentRequestsRepository import PaymentRequestsRepository
 from core.commands.ForwardPaymentRequestToAcquiringBank import (

@@ -2,7 +2,7 @@ import os
 
 import requests
 
-from application.clients.aws import AWSClient
+from application.clients.AWSClient import AWSClient
 from application.mapping.payment_request_mapper import Mapper
 from core.payment_request_aggregate.PaymentRequest import PaymentRequest
 from shared_kernel.lambda_logging import get_logger

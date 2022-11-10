@@ -26,6 +26,18 @@ def test_if_ACQUIRING_BANK_POST_PAYMENT_REQUEST_URL_is_not_set_client_raises_Key
 
 
 @patch.object(requests, "post")
+def test_post_payment_request_does_not_call_over_http_when_in_localstack(
+    mock_post_payment_request, payment_request, localstack_environment_variable
+):
+    # Given
+    acquiring_bank_client = AcquiringBankClient()
+    # When
+    acquiring_bank_client.post_payment_request(payment_request)
+
+    mock_post_payment_request.assert_not_called()
+
+
+@patch.object(requests, "post")
 def test_post_payment_request_happy_path(
     mock_post, payment_request, api_key_secret_in_secretsmanager
 ):

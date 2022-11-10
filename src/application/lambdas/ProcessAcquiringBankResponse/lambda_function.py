@@ -15,11 +15,16 @@ from shared_kernel.lambda_logging.set_up_logger import add_context, get_logger
 @return_400_for_domain_exceptions
 def lambda_handler(event, context):
     logger = get_logger()
+
+    # Some services stringify JSON (escaping quotes), others don't. Try to handle both scenarios,
+    # since this Lambda is triggered via CLI, but would be called by an application load balancer
+    # if development continued in AWS
+
     if type(event["body"]) == str:
         payload = json.loads(event["body"])
     else:
         payload = event["body"]
-        
+
     try:
         payment_request_id = payload["payment_request_id"]
         add_context(logger, "payment_request_id", payment_request_id)

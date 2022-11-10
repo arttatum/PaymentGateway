@@ -51,6 +51,14 @@ def payment_requests_table(dynamodb):
 
 
 @pytest.fixture(scope="function")
+def localstack_environment_variable():
+    os.environ["LOCALSTACK_HOSTNAME"] = "127.0.0.1"
+    yield
+    if os.environ.get("LOCALSTACK_HOSTNAME"):
+        del os.environ["LOCALSTACK_HOSTNAME"]
+
+
+@pytest.fixture(scope="function")
 def secretsmanager():
     with mock_secretsmanager():
         yield boto3.client("secretsmanager")

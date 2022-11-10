@@ -13,11 +13,6 @@ from core.payment_request_aggregate.value_objects.CardNumber import CardNumber
 from core.payment_request_aggregate.value_objects.CVV import CVV
 from tests.conftest import property_values_are_equal
 
-# TODO: Mock out dymabo's put_item() and get_item() methods to simulate failed connection to dynamodb.
-
-# Using moto provides virtual dynamodb, which allows us to test behaviours in a more realistic fashion,
-# but it is not suitable for simulating random errors.
-
 
 def test_PaymentRequestRepository_raises_KeyError_if_table_name_env_variable_is_not_set(
     payment_requests_table,

@@ -61,3 +61,17 @@ def test_invalid_log_level_defaults_to_INFO(capsys):
     logs = capsys.readouterr().err
     assert "This record will be sent to a file descriptor" in logs
     assert "This won't be in there, awesome!" not in logs
+
+
+def test_configure_lambda_logger_quiet_mode(caplog):
+    os.environ["QUIET_LOGS"] = "true"
+    some_uuid = str(uuid.uuid4())
+    configure_context_logger(new_attribute=some_uuid)
+    logger = get_logger()
+    logger.info("This record has an extra attribute")
+    logger.info("So does this one!")
+
+    for log in caplog.records:
+        assert "INFO" not in log
+
+    os.environ["QUIET_LOGS"] = ""
