@@ -11,7 +11,8 @@ Ensure you have the following tools available:
 - docker-compose
 - AWS CLI
 - docker / colima (Daemon must be running to host container)
-- mac or linux (makefile may not work as intended on windows)
+
+This system was built on MacOS with a zsh shell. Reliability for other shells and operating systems is not guaranteed.
 
 
 ## Deploy infrastructure to localstack container
