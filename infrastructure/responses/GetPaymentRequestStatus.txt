@@ -1,1 +1,1 @@
-{"body":{"payment_details":{"amount":99.99,"card_number":"********3456","currency":"POUNDS","cvv":"374","expiry_date":"12-26","id":"130e3f39-7031-476f-91a3-11425de11496"},"status":"Processing - Awaiting response from acquiring bank"},"statusCode":200}
+{"body":{"payment_details":{"amount":99.99,"card_number":"********3456","currency":"POUNDS","cvv":"374","expiry_date":"12-26","id":"f01592ba-f229-4ff1-9398-a2a4b0bd1e22"},"status":"Paid into account"},"statusCode":200}

@@ -119,6 +119,8 @@ query_dynamo:
 .PHONY: break_forward_payment_request
 break_forward_payment_request:
 	@printf "\e[31;1m\n%s\n" "Breaking the ForwardPaymentRequestToAcquiringBank lambda configuration!"
+	$(eval UNIX_TIME_START = $(shell date +%s))
+
 	@aws --endpoint-url=http://localhost:4566 \
 	lambda update-function-configuration --function-name ForwardPaymentRequestToAcquiringBank \
 	--profile local \
@@ -136,13 +138,14 @@ break_forward_payment_request:
 	--log-type Tail --query 'LogResult' --output text |  base64 -d
 
 	@printf "\e[32;1m\n\n%s\n\n" "SubmitPaymentRequest ran to completion! A command was published to an SQS queue."
-	@printf "\e[34;1m\n  %s\n\n" "In the background, the ForwardPaymentRequestToAcquiringBank is failing, due to a (deliberate) configuration issue" 
+	@printf "\e[31;0m %s\n" "In the background, the ForwardPaymentRequestToAcquiringBank is failing, due to a (deliberate) configuration issue" 
 	@sleep 3
-	@printf "\e[34;1m\n  %s\n\n" "The message it fails to process will be added to the DLQ."
+	@printf "\e[31;0m %s\n" "The message it fails to process will be added to the DLQ."
 	@sleep 3
-	@printf "\e[34;1m\n  %s\n\n" "In a few moments we will parse the logs to show this journey..."
-	@sleep 3
-	@docker logs localstack_payment_gateway --since 40s | sed -n '/arn:aws:sqs:eu-west-2:000000000000:forward-payment-request-to-acquiring-bank/p'
+	@printf "\e[31;0m %s\n\n" "In a few moments we will parse the logs to show this journey..."
+	@sleep 1
+	@printf "\e[34;1m\n%s\n\n" "Logs:"
+	@docker logs localstack_payment_gateway --since $(UNIX_TIME_START) | grep -E sqs | cut -d " " -f3- | awk '{ print "{ \"message\": \"",$$0,"\" }" }'	
 
 	@printf "\e[33;1m\n%s\n" "Querying DLQ for messages..."
 
