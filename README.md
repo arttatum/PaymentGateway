@@ -1,6 +1,6 @@
 # Payment Gateway
 
-A simple MVP for a payment gateway.
+A simple payment gateway.
 
 ## Features:
 
