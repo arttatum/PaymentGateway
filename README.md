@@ -53,6 +53,7 @@ The below diagrams illustrate a first draft on how to build this solution for pr
 #### Pre-requesites
 - pip3
 - pyenv
+- MacOS or Linux
 
 If you do not have python 3.9.13 installed, it will be installed when you run any `make` command. 
 
