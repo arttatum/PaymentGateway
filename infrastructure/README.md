@@ -48,7 +48,7 @@ simple. Responses returned by Lambdas can be found in the /responses folder.
 
 Run `make valid_payment_request`
 
-Emulates calling the POST merchant/{merchant_id}/payments/ API, which triggers the SubmitPaymentRequest Lambda.
+Emulates calling the `POST merchant/{merchant_id}/payments/` API, which triggers the SubmitPaymentRequest Lambda.
 
 When provided with valid input, a 201 HTTP response and a body containing the newly created PaymentRequest ID is returned.
 
@@ -67,7 +67,7 @@ Terminal output:
 
 Run `make invalid_payment_request`
 
-Emulates calling the POST merchant/{merchant_id}/payments/ API with invalid input.
+Emulates calling the `POST merchant/{merchant_id}/payments/` API with invalid input.
 
 A body containing the validation errors and a 400 HTTP response code are returned.
 
@@ -82,7 +82,7 @@ Terminal output:
 
 Run `make get_payment_request_status PAYMENT_REQUEST_ID=<required_value> MERCHANT_ID=<default_provided> `
 
-Emulates calling the GET merchant/{merchant_id}/payment/{payment_id} API, which triggers the GetPaymentRequestStatus lambda.
+Emulates calling the `GET merchant/{merchant_id}/payment/{payment_id}` API, which triggers the GetPaymentRequestStatus lambda.
 
 Terminal output:
 

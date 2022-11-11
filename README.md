@@ -5,12 +5,21 @@ A simple MVP for a payment gateway.
 ## Features:
 
 - Make a Payment Request as a Merchant.
+    - Edge optimised API Gateway
+    - `POST merchant/{merchant_id}/payments/ `
 
 - Forward Payment Request to Acquiring Bank.
+    - Triggered after Payment Request from merchant is accepted by the Payment Gateway
+    - The Lambda that forwards the Payment Request to the Acquiring Bank is an SQS message consumer
 
 - Provide update regarding a Payment Request as an Acquiring Bank.
+    - Private link / single purpose VPC Endpoint Service
+    - Called via HTTP with body that conforms to an agreed contract 
 
 - Get the status of a Payment Request as a Merchant.
+    - Edge optimised API Gateway
+    - `GET merchant/{merchant_id}/payment/{payment_id}`
+
 
 ## Assumptions & Limitations
 
@@ -23,9 +32,11 @@ For expediency, I have implemented:
 
 I have not implemented:
 - IAM
-- Security Groups
+- Network configuration / Security Groups
 - Elastic Load Balancing
 - API Gateway
+- VPC Endpint
+
 
 To enable testing and demonstration in a local environment, without requiring provisioning and deployment to an AWS environemnt, I have opted to use localstack[https://localstack.cloud/]s. The README in the infrastructure folder provides detailed instructions on how to set up and run the solution locally.
 
@@ -55,7 +66,7 @@ The below diagrams illustrate a first draft on how to build this solution for pr
 - pyenv
 - MacOS or Linux
 
-If you do not have python 3.9.13 installed, it will be installed when you run any `make` command. 
+If you do not have python 3.9.13 installed, it should be installed when you run any `make` command. 
 
 A python virtual environment is used to manage dependencies in a consistent manner. All commands are run within an activated virtual environment automatically.
 
