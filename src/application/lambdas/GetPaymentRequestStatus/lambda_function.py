@@ -86,7 +86,9 @@ def lambda_handler(event, context):
     if not payment_request.is_sent_to_acquiring_bank:
         return {
             "statusCode": 200,
-            "body": GetPaymentRequestStatusDTO(payment_request, "Processing - In Payment Gateway").json,
+            "body": GetPaymentRequestStatusDTO(
+                payment_request, "Processing - In Payment Gateway"
+            ).json,
         }
 
     if payment_request.acquiring_bank_response is None:

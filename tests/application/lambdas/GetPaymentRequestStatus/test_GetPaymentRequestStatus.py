@@ -12,7 +12,9 @@ from core.payment_request_aggregate.value_objects.AcquiringBankResponse import (
 
 
 def test_GetPaymentRequestStatus_returns_200_if_PaymentRequest_is_not_sent_to_acquiring_bank(
-    make_lambda_context_object, make_api_gateway_event_get_payment_request_status, payment_requests_table
+    make_lambda_context_object,
+    make_api_gateway_event_get_payment_request_status,
+    payment_requests_table,
 ):
     # Given
     merchant_id = str(uuid.uuid4())
