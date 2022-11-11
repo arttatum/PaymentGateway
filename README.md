@@ -12,20 +12,22 @@ A simple MVP for a payment gateway.
 
 - Get the status of a Payment Request as a Merchant.
 
-## Assumptions
+## Assumptions & Limitations
 
 I have assumed that the Acquiring Bank will response asynchronously, hence I have modelled a callback endpoint where they provide status updates.
-
-The Acquiring Bank will authenticate our requests through API Keys and Network layer controls (Safelisted AWS Account ID / VPC Endpoint ID).
-
-## What I have delivered today, what I would deliver given more time
 
 For expediency, I have implemented: 
 - The Lambdas at the core of these designs
 - The DynamoDB table that stores the PaymentRequest aggregate
 - The SQS queue that decouples accepting a PaymentRequest from a Merchant from forwarding it to the Acquiring Bank.
 
-To enable testing and demonstration in a local environment, without requiring provisioning and deployment to an AWS environemnt, I have opted to use localstack[https://localstack.cloud/]. The README in the infrastructure folder provides detailed instructions on how to set up and run the solution locally.
+I have not implemented:
+- IAM
+- Security Groups
+- Elastic Load Balancing
+- API Gateway
+
+To enable testing and demonstration in a local environment, without requiring provisioning and deployment to an AWS environemnt, I have opted to use localstack[https://localstack.cloud/]s. The README in the infrastructure folder provides detailed instructions on how to set up and run the solution locally.
 
 The below diagrams illustrate a first draft on how to build this solution for production workloads. The designs aim to optimise for performance, security, scalability, and cost.
 
@@ -59,6 +61,8 @@ A python virtual environment is used to manage dependencies in a consistent mann
 ## Run the unit test suite
 
 Enter the root directory of the repository in your terminal, then run `make unit` 
+
+<img width="829" alt="image" src="https://user-images.githubusercontent.com/58389740/201302220-b7ba05e9-9c8e-40e5-acd5-20754189b5f1.png">
 
 ## Run the linter 
 
@@ -113,4 +117,4 @@ The only aggregate modelled here is the PaymentRequest. The Merchant aggregate i
 
 ### Shared Kernel
 
-A slight misuse of the term, this folder contains the code that is required across all layers (Guard clauses, logging)
+A slight misuse of the term, this folder contains the code that is required across all layers (Guard clauses, logging, ValueObject, DomainException, AggregateRoot, Command)
