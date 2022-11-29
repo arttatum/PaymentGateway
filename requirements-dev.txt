@@ -4,4 +4,4 @@ isort==5.10.1
 flake8==5.0.4
 moto==4.0.9
 coverage==6.5.0
-boto3==1.26.9
+boto3==1.26.18
