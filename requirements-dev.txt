@@ -2,6 +2,6 @@ pytest==7.2.0
 black==22.10.0
 isort==5.10.1
 flake8==5.0.4
-moto==4.0.9
+moto==4.0.12
 coverage==6.5.0
 boto3==1.26.9
